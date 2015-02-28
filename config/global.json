@@ -1,0 +1,12 @@
+{
+    "applications": {
+        "_default": {
+            "link": "cs247"
+        }, 
+        "cs247": {
+            "applicationId": "AAPG8rW29toO8n9dtnDgvE3Pown0dOObhCYGWwDc", 
+            "masterKey": "1an58u5V5nEkGeqRwEWdUwAfaXqk7Psq1pigsyX6",
+            "javascriptKey": "AnSqYJ1QunLJ0fEIpXagrLb10XKk3LufegTKhPeG"
+        }
+    }
+}
