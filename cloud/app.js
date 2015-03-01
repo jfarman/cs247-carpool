@@ -104,7 +104,8 @@ app.get('/blank', function(req, res) {
 });
 
 app.get('/rides-index', function(req, res) {
-  var rides = [
+  // fetch all rides
+  var temp_rides = [
     {
       ride_id: "ride0",
       date: "March 2, 2015",
@@ -153,11 +154,10 @@ app.get('/rides-index', function(req, res) {
     }
   ];
 
-  res.render('pages/rides-index', {
+  res.render('pages/rides', {
     title: "Rides",
-    rides: rides
+    rides: temp_rides
   });
-
 })
 
 app.get('/ride-details', function(req, res) {
@@ -166,6 +166,41 @@ app.get('/ride-details', function(req, res) {
       {
         title: "Ride Details", passengers: passengers    
       });
+});
+
+app.get('/ride/swap/:id', function(req, res) {
+  var ride_id = req.params.id
+
+  var temp_ride_obj = {
+    date: "March 5, 2015",
+    time: "8:20 AM",
+    group: "School",
+    curr_driver: "Ricky Tran"
+  }
+
+  res.render('pages/ride-swap-form',
+      {
+        title: "Ride Swap",
+        ride_id: ride_id,
+        ride: temp_ride_obj
+      });
+});
+
+app.post('/ride/swap', function(req, res) {
+  var ride_id = "XQ3p6Lrhhg"
+  var note = req.body.note
+
+  var swapObject = new Parse.Object("swap_requests");
+  swapObject.set("new_driverId", null);
+  swapObject.set("old_driverId", "5nAvchlMk5");
+  swapObject.set("rideId", ride_id);
+  swapObject.set("note_text", note);
+
+  swapObject.save().then(function() {
+    res.redirect('/');
+  }, function(error) {
+    console.log("New swap request could not be created");
+  })
 });
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
