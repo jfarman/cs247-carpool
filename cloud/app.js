@@ -102,6 +102,15 @@ app.get('/blank', function(req, res) {
         title: "Blank Page"    
       });
 });
+
+
+app.get('/ride-details', function(req, res) {
+  var passengers = ["Liz Archer", "Andrew Baek", "Kjellen Belcher", "Jenny Farman"]
+  res.render('pages/ride-details',
+      {
+        title: "Ride Details", passengers: passengers    
+      });
+});
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
 //   // GET http://example.parseapp.com/test?message=hello
