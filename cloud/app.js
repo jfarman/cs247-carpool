@@ -1,5 +1,5 @@
 // Parse initialization
-Parse.initialize("vZmOZXJcisMII15gQS09rteukfzJD9sRf2oEPLG5", "RnjrmKHIaCxjVSIdAhVTOWAl3WT5DzfnCmgKGHCf");
+Parse.initialize("9xPBTlM204Jbn3ijd45g4NKnSw19JeOjgpgdIwLS", "adkGf2Zv7T6hSeEb16XedCuguxTRt3U71Lc2xWNj");
 
 // These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
@@ -162,6 +162,9 @@ app.get('/rides-index', function(req, res) {
 
 app.get('/ride-details', function(req, res) {
   var passengers = ["Liz Archer", "Andrew Baek", "Kjellen Belcher", "Jenny Farman"]
+  var ride_passengers = Parse.Object.extend("ride_passengers");
+  var query = new Parse.Query(ride_passengers);
+  query.equalTo("rideId", "XQ3p6Lrhhg");
   res.render('pages/ride-details',
       {
         title: "Ride Details", passengers: passengers    
