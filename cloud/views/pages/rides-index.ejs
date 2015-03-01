@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <% include ../partials/head %>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <% include ../partials/header %>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Rides</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <% for (var ride in rides) { %>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><%= rides[ride].date %></h3>
+                            </div>
+                            <ul class="list-group">
+                                <% for (var shift in rides[ride].shifts) { %>
+                                <a href="ride-details" class="list-group-item ">
+                                <%= rides[ride].shifts[shift].group %>
+
+                                <span class="pull-right">
+                                    <%= rides[ride].shifts[shift].time %>
+                                </span>
+                                
+                                </a>
+
+                                <% } %>
+                            </ul>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
+
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <% include ../partials/footer %>
+
+</body>
+
+</html>

@@ -102,6 +102,63 @@ app.get('/blank', function(req, res) {
         title: "Blank Page"    
       });
 });
+
+app.get('/rides-index', function(req, res) {
+  var rides = [
+    {
+      ride_id: "ride0",
+      date: "March 2, 2015",
+      shifts: [{
+        shift_id: "shift0",
+        time: "8:20 AM",
+        group: "School"
+      },
+      {
+        shift_id: "shift1",
+        time: "3:00 PM",
+        group: "Swim"
+      }]
+    },
+    {
+      ride_id: "ride1",
+      date: "March 3, 2015",
+      shifts: [{
+        shift_id: "shift3",
+        time: "8:20 AM",
+        group: "School"
+      }]
+    },
+    {
+      ride_id: "ride2",
+      date: "March 3, 2015",
+      shifts: [{
+        shift_id: "shift0",
+        time: "8:20 AM",
+        group: "School"
+      },
+      {
+        shift_id: "shift1",
+        time: "3:00 PM",
+        group: "Swim"
+      }]
+    },
+    {
+      ride_id: "ride3",
+      date: "March 5, 2015",
+      shifts: [{
+        shift_id: "shift3",
+        time: "8:20 AM",
+        group: "School"
+      }]
+    }
+  ];
+
+  res.render('pages/rides-index', {
+    title: "Rides",
+    rides: rides
+  });
+
+})
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
 //   // GET http://example.parseapp.com/test?message=hello
