@@ -12,18 +12,25 @@ app.use(express.bodyParser());    // Middleware for reading request body
 
 // This is an example of hooking up a request handler with a specific request
 // path and HTTP verb using the Express routing API.
-app.get('/', function(req, res) {
-  res.render('pages/index',
-      {
-        title: "Index"    
-      });
-});
-
 app.get('/login', function(req, res) {
   res.render('pages/login',
       {
         title: "Login"    
       });
+});
+
+app.post('/login', function(req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+
+    Parse.User.logIn(username, password, {
+        success: function(user) {
+            res.redirect('/');            
+         },
+        error: function(user, error) {
+            console.log("login failed", error);
+        }
+    });
 });
 
 app.get('/flot', function(req, res) {
@@ -103,7 +110,7 @@ app.get('/blank', function(req, res) {
       });
 });
 
-app.get('/rides-index', function(req, res) {
+app.get('/', function(req, res) {
   // fetch all rides
   var temp_rides = [
     {
@@ -154,7 +161,7 @@ app.get('/rides-index', function(req, res) {
     }
   ];
 
-  res.render('pages/rides', {
+  res.render('pages/index', {
     title: "Rides",
     rides: temp_rides
   });
@@ -193,17 +200,30 @@ app.post('/ride/swap', function(req, res) {
   var ride_id = "XQ3p6Lrhhg"
   var note = req.body.note
 
-  var swapObject = new Parse.Object("swap_requests");
-  swapObject.set("new_driverId", null);
-  swapObject.set("old_driverId", "5nAvchlMk5");
-  swapObject.set("rideId", ride_id);
-  swapObject.set("note_text", note);
+  var User = Parse.Object.extend("user");
+  var userQuery = new Parse.Query(User);
+  var user;
+  userQuery.equalTo("objectId", "OgcTtU2ykN");
+  userQuery.find().then(function(u) {
+    user = u
+    var Ride = Parse.Object.extend("ride");
+    var rideQuery = new Parse.Query(Ride);
+    rideQuery.equalTo("objectId", ride_id);
+    return rideQuery.find();
+  }).then (function(ride) {
+    var swapObject = new Parse.Object("swap_requests");
+    swapObject.set("new_driverId", null);
+    swapObject.set("old_driverId", user[0]);
+    swapObject.set("rideId", ride[0]);
+    swapObject.set("note_text", note);
+    swapObject.set("active", true);
 
-  swapObject.save().then(function() {
-    res.redirect('/');
-  }, function(error) {
-    console.log("New swap request could not be created");
-  })
+    return swapObject.save();
+  }).then(function() {
+      res.redirect('/');
+    }, function(error) {
+      console.log(error);
+    });
 });
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
