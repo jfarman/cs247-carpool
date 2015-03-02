@@ -142,72 +142,6 @@ app.get('/', function(req, res) {
 		}
 	});
 });
-	
-	
-	
-	
-/* 	
-  // fetch all rides
-    var user = Parse.User.current()
-
-    if (user) {
-        console.log(user);
-    } else {
-        console.log("no user found");
-    }
-  var temp_rides = [
-    {
-      ride_id: "ride0",
-      date: "March 2, 2015",
-      shifts: [{
-        shift_id: "shift0",
-        time: "8:20 AM",
-        group: "School"
-      },
-      {
-        shift_id: "shift1",
-        time: "3:00 PM",
-        group: "Swim"
-      }]
-    },
-    {
-      ride_id: "ride1",
-      date: "March 3, 2015",
-      shifts: [{
-        shift_id: "shift3",
-        time: "8:20 AM",
-        group: "School"
-      }]
-    },
-    {
-      ride_id: "ride2",
-      date: "March 3, 2015",
-      shifts: [{
-        shift_id: "shift0",
-        time: "8:20 AM",
-        group: "School"
-      },
-      {
-        shift_id: "shift1",
-        time: "3:00 PM",
-        group: "Swim"
-      }]
-    },
-    {
-      ride_id: "ride3",
-      date: "March 5, 2015",
-      shifts: [{
-        shift_id: "shift3",
-        time: "8:20 AM",
-        group: "School"
-      }]
-    }
-  ];
-
-  res.render('pages/index', {
-    title: "Rides",
-    rides: temp_rides
-  }); */
 
 app.get('/group-details/:id', function(req, res) {
   /* sample id = M4hVPSu2eL */
@@ -352,6 +286,8 @@ app.post('/ride/swap', function(req, res) {
 app.get('/swap/', function(req, res) {
     var Swap = Parse.Object.extend("swap_requests");
     var swapQuery = new Parse.Query(Swap);
+	swapQuery.include("rideId");
+	swapQuery.include("old_driverId");	
 
     swapQuery.equalTo("isActive", true).find({
         success: function(swaps) {
