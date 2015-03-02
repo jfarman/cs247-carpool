@@ -118,15 +118,22 @@ app.get('/', function(req, res) {
 	var query = new Parse.Query(ride);
 	console.log(user.getUsername());
 	query.equalTo("driverId", Parse.User.current());
+    query.include("groupId");
 	query.find({
 		success: function(results){
-			console.log(results);
-			console.log(results[0].get("datetime").getDate());
+            var rides = {};
+            for (var result in results) {
+                if (typeof rides[results[result].get("datetime").toDateString()] == "undefined" ) {
+                    rides[results[result].get("datetime").toDateString()] = [];
+                }
+               rides[results[result].get("datetime").toDateString()].push(results[result])
+            }
+			console.log(rides["Tue Mar 03 2015"][0].get("groupId"));
 			
 			
 				res.render('pages/index', {
 					title: "Rides",
-					rides: results
+					rides: rides
 				});
 				
 		},
