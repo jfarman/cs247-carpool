@@ -28,19 +28,18 @@
                         <% for (var ride in rides) { %>
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><%= rides[ride].datetime %></h3>
+                                <h3 class="panel-title"><%= rides[ride][0].get("datetime").toDateString() %></h3>
                             </div>
                             <ul class="list-group">
-                                <% for (var shift in rides[ride].shifts) { %>
-                                <a href="ride-details" class="list-group-item ">
-                                <%= rides[ride].shifts[shift].group %>
+                                <% for (var shift in rides[ride]) { %>
+                                <a href="ride-details/<%= rides[ride][shift].id %>" class="list-group-item ">
+                                <%= rides[ride][shift].get("groupId").get("name") %>
 
                                 <span class="pull-right">
-                                    <%= rides[ride].shifts[shift].time %>
+                                    <%= rides[ride][shift].get("datetime") %>
                                 </span>
                                 
                                 </a>
-
                                 <% } %>
                             </ul>
                         </div>

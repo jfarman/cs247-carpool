@@ -15,11 +15,22 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <td>Day&Time</td>
-                            <td>Current Driver</td>
-                            <td>Description</td>
+                            <td><b>Day&Time</td></b>
+                            <td><b>Current Driver</td></b>
+                            <td><b>Description</td></b>
                         </tr>
                     </thead>
+					
+					<% for (var request in requests) { %>
+						<tr>
+							<td><%=requests[request].get("rideId").get("datetime") %></td>
+							<td><%=requests[request].get("old_driverId").get("first_name") %> <%=requests[request].get("old_driverId").get("last_name") %></td>
+							<td><%=requests[request].get("note_text") %><br><button type="button" class="btn btn-default" aria-label="Left Align">
+								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Pick up shift
+								</button></td>
+							
+						</tr>
+					<% } %>
 
                 </table>
             </div>
