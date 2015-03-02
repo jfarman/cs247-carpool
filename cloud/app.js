@@ -111,6 +111,35 @@ app.get('/blank', function(req, res) {
 });
 
 app.get('/', function(req, res) {
+
+	var user = Parse.User.current();
+	//user.fetch();
+	var ride = Parse.Object.extend("ride");
+	var query = new Parse.Query(ride);
+	console.log(user.getUsername());
+	query.equalTo("driverId", Parse.User.current());
+	query.find({
+		success: function(results){
+			console.log(results);
+			console.log(results[0].get("datetime").getDate());
+			
+			
+				res.render('pages/index', {
+					title: "Rides",
+					rides: results
+				});
+				
+		},
+		error: function(error){
+			console.log(error);
+		}
+	});
+});
+	
+	
+	
+	
+/* 	
   // fetch all rides
   var temp_rides = [
     {
@@ -164,8 +193,8 @@ app.get('/', function(req, res) {
   res.render('pages/index', {
     title: "Rides",
     rides: temp_rides
-  });
-})
+  }); */
+
 
 app.get('/ride-details', function(req, res) {
   var passengers = ["Liz Archer", "Andrew Baek", "Kjellen Belcher", "Jenny Farman"]
