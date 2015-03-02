@@ -348,12 +348,19 @@ app.get('/swap/', function(req, res) {
 
     swapQuery.equalTo("isActive", true).find({
         success: function(swaps) {
-            console.log(swaps);   
+            console.log(swaps); 
+			res.render('pages/swap-board',
+			{
+		        title: "Swapboard",    
+				requests: swaps
+			});
         }, 
         error: function(error) {
             console.log(error);
         }
     });
+	
+
 
 
 });
