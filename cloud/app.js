@@ -243,9 +243,8 @@ app.get('/ride/swap/:id', function(req, res) {
   var ride_id = req.params.id
 
   var temp_ride_obj = {
-    date: "March 5, 2015",
-    time: "8:20 AM",
-    group: "School",
+    date: "8:20 AM - March 5, 2015",
+    group: "Swimming",
     curr_driver: "Ricky Tran"
   }
 
