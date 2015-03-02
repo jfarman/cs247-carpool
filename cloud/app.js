@@ -130,9 +130,6 @@ app.get('/', function(req, res) {
                 var date = moment(results[result].get("datetime")).format('h:mm a MM/DD/YYYY');
                 rides[results[result].get("datetime").toDateString()][rides[results[result].get("datetime").toDateString()].length-1].date = date
             }
-			console.log(rides["Tue Mar 03 2015"][0]);
-			
-			
 				res.render('pages/index', {
 					title: "Rides",
 					rides: rides
