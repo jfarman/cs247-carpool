@@ -112,6 +112,13 @@ app.get('/blank', function(req, res) {
 
 app.get('/', function(req, res) {
   // fetch all rides
+    var user = Parse.User.current()
+
+    if (user) {
+        console.log(user);
+    } else {
+        console.log("no user found");
+    }
   var temp_rides = [
     {
       ride_id: "ride0",
@@ -216,7 +223,7 @@ app.post('/ride/swap', function(req, res) {
     swapObject.set("old_driverId", user[0]);
     swapObject.set("rideId", ride[0]);
     swapObject.set("note_text", note);
-    swapObject.set("active", true);
+    swapObject.set("isActive", true);
 
     return swapObject.save();
   }).then(function() {
@@ -224,6 +231,22 @@ app.post('/ride/swap', function(req, res) {
     }, function(error) {
       console.log(error);
     });
+});
+
+app.get('/swap/', function(req, res) {
+    var Swap = Parse.Object.extend("swap_requests");
+    var swapQuery = new Parse.Query(Swap);
+
+    swapQuery.equalTo("isActive", true).find({
+        success: function(swaps) {
+            console.log(swaps);   
+        }, 
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+
 });
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
