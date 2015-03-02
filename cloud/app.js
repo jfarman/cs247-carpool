@@ -262,6 +262,9 @@ app.get('/ride-details/:id', function(req, res) {
       var group_name = group.get("name");
       var driver = ride.get("driverId");
       var driver_name = driver.get("first_name") + " " + driver.get("last_name");
+      var moment = require('moment');
+      var date = moment(ride.get("datetime")).format('h:mm a MM/DD/YYYY');
+      console.log(" >>>> " + date);
       var passenger_arr = new Array();
       var ride_passengers = Parse.Object.extend("ride_passenger");
       var passQuery = new Parse.Query(ride_passengers);
@@ -279,7 +282,7 @@ app.get('/ride-details/:id', function(req, res) {
             title: "Ride Details", 
             passengers: passenger_arr, 
             group: group_name,
-            date: ride.get("datetime"),
+            date: date,
             driver_name: driver_name
         });
       },
