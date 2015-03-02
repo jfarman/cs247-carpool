@@ -209,7 +209,11 @@ app.get('/group-details/:id', function(req, res) {
   groupQuery.get(req.params.id, {
     success: function(group) {
       var group_name = group.get("name");
+      
       var members_arr = new Array();
+      var drivers_arr = new Array();
+      var passengers_arr = new Array();
+
       var members = Parse.Object.extend("group_member");
       var memberQuery = new Parse.Query(members);
       memberQuery.equalTo("groupId", group);
@@ -220,10 +224,17 @@ app.get('/group-details/:id', function(req, res) {
             var user = results[i].get("userId");
             var name = user.get("first_name") + " " + user.get("last_name");
             members_arr.push(name);
+            if (user.get("isParent")) {
+              drivers_arr.push(name);
+            } else {
+              passengers_arr.push(name);
+            }
         }
         res.render('pages/group-details', {
             title: "Group Details", 
-            members: members_arr, 
+            members: members_arr,
+            drivers: drivers_arr,
+            passengers: passengers_arr, 
             group: group_name
         });
       },

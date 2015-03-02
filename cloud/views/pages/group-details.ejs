@@ -24,21 +24,35 @@
                      </div>
                  </div>
                  <!-- /.row -->
-                <div class="row">
+                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <!-- Default panel contents -->
-                             <div class="panel-heading">Group Members</div>
+                             <div class="panel-heading">Group Members (parents)</div>
                              <ul class="list-group">
-                                <% for (var m in members) {%>
-                                    <li class="list-group-item"><%=members[m]%></li>
+                                <% for (var d in drivers) {%>
+                                    <li class="list-group-item"><%=drivers[d]%></li>
                                 <% }%>
                             </ul>
                         </div>
                      </div>
+                        <!-- /.col-lg-12 -->
                  </div>
-                    <!-- /.col-lg-12 -->
-                </div>
+                <!-- /.row -->
+                 <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <!-- Default panel contents -->
+                             <div class="panel-heading">Group Members (kids) </div>
+                             <ul class="list-group">
+                                <% for (var p in passengers) {%>
+                                    <li class="list-group-item"><%=passengers[p]%></li>
+                                <% }%>
+                            </ul>
+                        </div>
+                     </div>
+                        <!-- /.col-lg-12 -->
+                 </div>
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
