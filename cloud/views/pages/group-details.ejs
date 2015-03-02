@@ -14,13 +14,10 @@
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <!-- Default panel contents -->
-                             <div class="panel-heading">Ride Details</div>
+                             <div class="panel-heading">Group Details</div>
                              <ul class="list-group">
                                 <li class="list-group-item">
                                     <%=group%>
-                                     <span class="pull-right">
-                                        <%=date%>
-                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -31,27 +28,10 @@
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <!-- Default panel contents -->
-                             <div class="panel-heading">Driver</div>
+                             <div class="panel-heading">Group Members</div>
                              <ul class="list-group">
-                                <li class="list-group-item">
-                                    <%=driver_name%>
-                                    <span class="pull-right">
-                                      <a href="/ride/swap/0" class="btn btn-xs btn-primary">Request Swap</a>
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                     </div>
-                 </div>
-                 <!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <!-- Default panel contents -->
-                             <div class="panel-heading">Ride Passengers</div>
-                             <ul class="list-group">
-                                <% for (var p in passengers) {%>
-                                    <li class="list-group-item"><%=passengers[p]%></li>
+                                <% for (var m in members) {%>
+                                    <li class="list-group-item"><%=members[m]%></li>
                                 <% }%>
                             </ul>
                         </div>

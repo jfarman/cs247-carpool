@@ -202,39 +202,82 @@ app.get('/', function(req, res) {
     rides: temp_rides
   }); */
 
-
-app.get('/ride-details/:id', function(req, res) {
-  var passenger_arr = new Array();
-  var ride_passengers = Parse.Object.extend("ride_passenger");
-  var query = new Parse.Query(ride_passengers);
-  /* sample id = XQ3p6Lrhhg */
-  var CurrentRide = Parse.Object.extend("ride");
-  var query = new Parse.Query(CurrentRide);
-  query.get(req.params.id, {
-    success: function(ride) {
-    // The object was retrieved successfully.
+app.get('/group-details/:id', function(req, res) {
+  /* sample id = M4hVPSu2eL */
+  var CurrentGroup = Parse.Object.extend("group");
+  var groupQuery = new Parse.Query(CurrentGroup);
+  groupQuery.get(req.params.id, {
+    success: function(group) {
+      var group_name = group.get("name");
+      var members_arr = new Array();
+      var members = Parse.Object.extend("group_member");
+      var memberQuery = new Parse.Query(members);
+      memberQuery.equalTo("groupId", group);
+      memberQuery.include("userId");
+      memberQuery.find({
+        success: function(results) {
+          for (var i = 0; i < results.length; i++) { 
+            var user = results[i].get("userId");
+            var name = user.get("first_name") + " " + user.get("last_name");
+            members_arr.push(name);
+        }
+        res.render('pages/group-details', {
+            title: "Group Details", 
+            members: members_arr, 
+            group: group_name
+        });
+      },
+        error: function(error) {
+          console.log("Error: " + error.code + " " + error.message);
+        }
+      });
     },
     error: function(ride, error) {
       console.log("Error: " + error.code + " " + error.message);
     }
   });
+});
 
-  query.equalTo("rideId_string", req.params.id);
-  query.include("passengerId");
 
-  query.find({
-    success: function(results) {
-      for (var i = 0; i < results.length; i++) { 
-        var user = results[i].get("passengerId");
-        var name = user.get("first_name") + " " + user.get("last_name");
-        console.log(name);
-        passenger_arr.push(name);
-    }
-    res.render('pages/ride-details', {
-        title: "Ride Details", passengers: passenger_arr   
-    });
-  },
-    error: function(error) {
+app.get('/ride-details/:id', function(req, res) {
+  /* sample id = XQ3p6Lrhhg */
+  var CurrentRide = Parse.Object.extend("ride");
+  var rideQuery = new Parse.Query(CurrentRide);
+  rideQuery.include("groupId");
+  rideQuery.include("driverId");
+  rideQuery.get(req.params.id, {
+    success: function(ride) {
+      var group = ride.get("groupId");
+      var group_name = group.get("name");
+      var driver = ride.get("driverId");
+      var driver_name = driver.get("first_name") + " " + driver.get("last_name");
+      var passenger_arr = new Array();
+      var ride_passengers = Parse.Object.extend("ride_passenger");
+      var passQuery = new Parse.Query(ride_passengers);
+      passQuery.equalTo("rideId_string", req.params.id);
+      passQuery.include("passengerId");
+      passQuery.find({
+        success: function(results) {
+          for (var i = 0; i < results.length; i++) { 
+            var user = results[i].get("passengerId");
+            var name = user.get("first_name") + " " + user.get("last_name");
+            console.log(name);
+            passenger_arr.push(name);
+        }
+        res.render('pages/ride-details', {
+            title: "Ride Details", 
+            passengers: passenger_arr, 
+            group: group_name,
+            date: ride.get("datetime"),
+            driver_name: driver_name
+        });
+      },
+        error: function(error) {
+          console.log("Error: " + error.code + " " + error.message);
+        }
+      });
+    },
+    error: function(ride, error) {
       console.log("Error: " + error.code + " " + error.message);
     }
   });
