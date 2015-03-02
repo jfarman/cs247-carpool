@@ -12,18 +12,25 @@ app.use(express.bodyParser());    // Middleware for reading request body
 
 // This is an example of hooking up a request handler with a specific request
 // path and HTTP verb using the Express routing API.
-app.get('/', function(req, res) {
-  res.render('pages/index',
-      {
-        title: "Index"    
-      });
-});
-
 app.get('/login', function(req, res) {
   res.render('pages/login',
       {
         title: "Login"    
       });
+});
+
+app.post('/login', function(req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+
+    Parse.User.logIn(username, password, {
+        success: function(user) {
+            res.redirect('/');            
+         },
+        error: function(user, error) {
+            console.log("login failed", error);
+        }
+    });
 });
 
 app.get('/flot', function(req, res) {
@@ -103,8 +110,45 @@ app.get('/blank', function(req, res) {
       });
 });
 
-app.get('/rides-index', function(req, res) {
-  var rides = [
+app.get('/', function(req, res) {
+
+	var user = Parse.User.current();
+	//user.fetch();
+	var ride = Parse.Object.extend("ride");
+	var query = new Parse.Query(ride);
+	console.log(user.getUsername());
+	query.equalTo("driverId", Parse.User.current());
+	query.find({
+		success: function(results){
+			console.log(results);
+			console.log(results[0].get("datetime").getDate());
+			
+			
+				res.render('pages/index', {
+					title: "Rides",
+					rides: results
+				});
+				
+		},
+		error: function(error){
+			console.log(error);
+		}
+	});
+});
+	
+	
+	
+	
+/* 	
+  // fetch all rides
+    var user = Parse.User.current()
+
+    if (user) {
+        console.log(user);
+    } else {
+        console.log("no user found");
+    }
+  var temp_rides = [
     {
       ride_id: "ride0",
       date: "March 2, 2015",
@@ -153,12 +197,11 @@ app.get('/rides-index', function(req, res) {
     }
   ];
 
-  res.render('pages/rides-index', {
+  res.render('pages/index', {
     title: "Rides",
-    rides: rides
-  });
+    rides: temp_rides
+  }); */
 
-})
 
 app.get('/ride-details/:id', function(req, res) {
   var passenger_arr = new Array();
@@ -195,6 +238,70 @@ app.get('/ride-details/:id', function(req, res) {
       console.log("Error: " + error.code + " " + error.message);
     }
   });
+});
+
+app.get('/ride/swap/:id', function(req, res) {
+  var ride_id = req.params.id
+
+  var temp_ride_obj = {
+    date: "March 5, 2015",
+    time: "8:20 AM",
+    group: "School",
+    curr_driver: "Ricky Tran"
+  }
+
+  res.render('pages/ride-swap-form',
+      {
+        title: "Ride Swap",
+        ride_id: ride_id,
+        ride: temp_ride_obj
+      });
+});
+
+app.post('/ride/swap', function(req, res) {
+  var ride_id = "XQ3p6Lrhhg"
+  var note = req.body.note
+
+  var User = Parse.Object.extend("user");
+  var userQuery = new Parse.Query(User);
+  var user;
+  userQuery.equalTo("objectId", "OgcTtU2ykN");
+  userQuery.find().then(function(u) {
+    user = u
+    var Ride = Parse.Object.extend("ride");
+    var rideQuery = new Parse.Query(Ride);
+    rideQuery.equalTo("objectId", ride_id);
+    return rideQuery.find();
+  }).then (function(ride) {
+    var swapObject = new Parse.Object("swap_requests");
+    swapObject.set("new_driverId", null);
+    swapObject.set("old_driverId", user[0]);
+    swapObject.set("rideId", ride[0]);
+    swapObject.set("note_text", note);
+    swapObject.set("isActive", true);
+
+    return swapObject.save();
+  }).then(function() {
+      res.redirect('/');
+    }, function(error) {
+      console.log(error);
+    });
+});
+
+app.get('/swap/', function(req, res) {
+    var Swap = Parse.Object.extend("swap_requests");
+    var swapQuery = new Parse.Query(Swap);
+
+    swapQuery.equalTo("isActive", true).find({
+        success: function(swaps) {
+            console.log(swaps);   
+        }, 
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+
 });
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
