@@ -160,15 +160,41 @@ app.get('/rides-index', function(req, res) {
 
 })
 
-app.get('/ride-details', function(req, res) {
-  var passengers = ["Liz Archer", "Andrew Baek", "Kjellen Belcher", "Jenny Farman"]
-  var ride_passengers = Parse.Object.extend("ride_passengers");
+app.get('/ride-details/:id', function(req, res) {
+  var passenger_arr = new Array();
+  var ride_passengers = Parse.Object.extend("ride_passenger");
   var query = new Parse.Query(ride_passengers);
-  query.equalTo("rideId", "XQ3p6Lrhhg");
-  res.render('pages/ride-details',
-      {
-        title: "Ride Details", passengers: passengers    
-      });
+  /* sample id = XQ3p6Lrhhg */
+  var CurrentRide = Parse.Object.extend("ride");
+  var query = new Parse.Query(CurrentRide);
+  query.get(req.params.id, {
+    success: function(ride) {
+    // The object was retrieved successfully.
+    },
+    error: function(ride, error) {
+      console.log("Error: " + error.code + " " + error.message);
+    }
+  });
+
+  query.equalTo("rideId_string", req.params.id);
+  query.include("passengerId");
+
+  query.find({
+    success: function(results) {
+      for (var i = 0; i < results.length; i++) { 
+        var user = results[i].get("passengerId");
+        var name = user.get("first_name") + " " + user.get("last_name");
+        console.log(name);
+        passenger_arr.push(name);
+    }
+    res.render('pages/ride-details', {
+        title: "Ride Details", passengers: passenger_arr   
+    });
+  },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+    }
+  });
 });
 // // Example reading from the request query string of an HTTP get request.
 // app.get('/test', function(req, res) {
