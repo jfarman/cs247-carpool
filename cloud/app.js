@@ -282,30 +282,22 @@ app.get('/ride/swap/:id', function(req, res) {
 });
 
 app.post('/ride/swap', function(req, res) {
-  var ride_id = "XQ3p6Lrhhg"
+  var ride_id = req.body.ride_id
   var note = req.body.note
 
-  var User = Parse.Object.extend("user");
-  var userQuery = new Parse.Query(User);
-  var user;
-  userQuery.equalTo("objectId", "OgcTtU2ykN");
-  userQuery.find().then(function(u) {
-    user = u
     var Ride = Parse.Object.extend("ride");
     var rideQuery = new Parse.Query(Ride);
-    rideQuery.equalTo("objectId", ride_id);
-    return rideQuery.find();
-  }).then (function(ride) {
-    var swapObject = new Parse.Object("swap_requests");
-    swapObject.set("new_driverId", null);
-    swapObject.set("old_driverId", user[0]);
-    swapObject.set("rideId", ride[0]);
-    swapObject.set("note_text", note);
-    swapObject.set("isActive", true);
+    rideQuery.get(ride_id).then (function(ride) {
+      var swapObject = new Parse.Object("swap_requests");
+      swapObject.set("new_driverId", null);
+      swapObject.set("old_driverId", ride.get("driverId"));
+      swapObject.set("rideId", ride);
+      swapObject.set("note_text", note);
+      swapObject.set("isActive", true);
 
-    return swapObject.save();
-  }).then(function() {
-      res.redirect('/');
+      return swapObject.save();
+    }).then(function() {
+      res.redirect('/swap/');
     }, function(error) {
       console.log(error);
     });
@@ -314,8 +306,9 @@ app.post('/ride/swap', function(req, res) {
 app.get('/swap/', function(req, res) {
     var Swap = Parse.Object.extend("swap_requests");
     var swapQuery = new Parse.Query(Swap);
-	swapQuery.include("rideId");
-	swapQuery.include("old_driverId");	
+	  swapQuery.include("rideId");
+	  swapQuery.include("old_driverId");	
+    swapQuery.descending("createdAt");
 
     swapQuery.equalTo("isActive", true).find({
         success: function(swaps) {
