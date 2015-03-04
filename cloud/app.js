@@ -5,6 +5,7 @@ Parse.initialize("9xPBTlM204Jbn3ijd45g4NKnSw19JeOjgpgdIwLS", "adkGf2Zv7T6hSeEb16
 var express = require('express');
 var app = express();
 var moment = require('moment');
+var date_format = "h:mm a MM/DD/YYYY";
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
@@ -207,7 +208,7 @@ app.get('/ride-details/:id', function(req, res) {
       var passenger_arr = new Array();
       var ride_passengers = Parse.Object.extend("ride_passenger");
       var passQuery = new Parse.Query(ride_passengers);
-      passQuery.equalTo("rideId_string", req.params.id);
+      passQuery.equalTo("rideId", ride);
       passQuery.include("passengerId");
       passQuery.find({
         success: function(results) {
@@ -219,6 +220,7 @@ app.get('/ride-details/:id', function(req, res) {
         }
         res.render('pages/ride-details', {
             title: "Ride Details", 
+            ride_id: ride.id,
             passengers: passenger_arr, 
             group: group_name,
             date: date,
@@ -237,20 +239,46 @@ app.get('/ride-details/:id', function(req, res) {
 });
 
 app.get('/ride/swap/:id', function(req, res) {
-  var ride_id = req.params.id
-
-  var temp_ride_obj = {
-    date: "8:20 AM - March 5, 2015",
-    group: "Swimming",
-    curr_driver: "Ricky Tran"
-  }
-
-  res.render('pages/ride-swap-form',
-      {
-        title: "Ride Swap",
-        ride_id: ride_id,
-        ride: temp_ride_obj
+  var Ride = Parse.Object.extend("ride");
+  var rideQuery = new Parse.Query(Ride);
+  rideQuery.include("groupId");
+  rideQuery.include("driverId");
+  rideQuery.get(req.params.id, {
+    success: function(ride) {
+      var group_name = ride.get("groupId").get("name");
+      var curr_driver_name = ride.get("driverId").get("first_name") + " " + ride.get("driverId").get("last_name");
+      var date_string = moment(ride.get("datetime")).format(date_format);
+      var passengers_arr = [];
+      var RidePassenger = Parse.Object.extend("ride_passenger");
+      var passQuery = new Parse.Query(RidePassenger);
+      passQuery.equalTo("rideId", ride);
+      passQuery.include("passengerId");
+      passQuery.find({
+        success: function(passengers) {
+          for (var i = 0; i < passengers.length; i++) { 
+            var user = passengers[i].get("passengerId");
+            var name = user.get("first_name") + " " + user.get("last_name");
+            passengers_arr.push(name);
+        }
+        res.render('pages/ride-swap.ejs', {
+            title: "Ride Swap", 
+            ride_id: req.params.id,
+            passengers: passengers_arr, 
+            group: group_name,
+            date: date_string,
+            driver_name: curr_driver_name
+        });
+      },
+        error: function(error) {
+          console.log("Error: " + error.code + " " + error.message);
+        }
       });
+    },
+    error: function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+    },
+  }
+  );
 });
 
 app.post('/ride/swap', function(req, res) {
