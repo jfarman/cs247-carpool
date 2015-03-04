@@ -18,6 +18,7 @@
                             <td><b>Day&Time</td></b>
                             <td><b>Current Driver</td></b>
                             <td><b>Description</td></b>
+                            <td><b>Action</td></b>
                         </tr>
                     </thead>
 					
@@ -25,8 +26,9 @@
 						<tr>
 							<td><%=requests[request].get("rideId").get("datetime") %></td>
 							<td><%=requests[request].get("old_driverId").get("first_name") %> <%=requests[request].get("old_driverId").get("last_name") %></td>
-							<td><%=requests[request].get("note_text") %><br><button type="button" class="btn btn-default" aria-label="Left Align">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Pick up shift
+              <td><%=requests[request].get("note_text") %></td>
+              <td><button type="button" class="btn btn-default" aria-label="Left Align">
+								<i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Pick up shift
 								</button></td>
 							
 						</tr>
