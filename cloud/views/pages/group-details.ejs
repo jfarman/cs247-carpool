@@ -17,7 +17,7 @@
                              <div class="panel-heading">Group Details</div>
                              <ul class="list-group">
                                 <li class="list-group-item">
-                                    <%=group%>
+                                    <%=group.get("name")%>
                                 </li>
                             </ul>
                         </div>
@@ -53,6 +53,9 @@
                      </div>
                         <!-- /.col-lg-12 -->
                  </div>
+                <div class="row">
+                  <a href="/message/group/<%= group.id %>" class="btn btn-primary">Message</a>
+                </div>
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
