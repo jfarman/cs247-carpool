@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../partials/head %>
+</head>
+
+<body>
+    <!-- Page Content -->
+    <div class="container-fluid main-container">
+        <div class="padding"></div>
+        <div class="row">
+            <div class="col-lg-12">
+              <div class="list-group">
+                <% for(var i=0; i<messages.length; i++) { %>
+                    <a href="/message/<%=messages[i].id%>" class="list-group-item">
+                    <div>
+                      <span class="message-from-label"><%=messages[i].get("fromId").get("first_name")%> <%=messages[i].get("fromId").get("last_name")%></span>
+                      <span class="message-date-label pull-right"><%=messages[i].createdAt%></span>
+                    </div>
+                    <div>
+                      <span class="message-subject-label"><strong><%=messages[i].get("subject")%> - </strong></span>
+                      <span class="message-body-label"><%=messages[i].get("message")%></span>
+                    </div> 
+                    </a>
+                <% } %>
+              </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+
+    <% include ../../partials/footer %>
+
+  </body>
+</html>
