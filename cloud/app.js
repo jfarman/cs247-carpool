@@ -149,8 +149,6 @@ app.get('/group-details/:id', function(req, res) {
   var groupQuery = new Parse.Query(CurrentGroup);
   groupQuery.get(req.params.id, {
     success: function(group) {
-      var group_name = group.get("name");
-      
       var members_arr = new Array();
       var drivers_arr = new Array();
       var passengers_arr = new Array();
@@ -176,7 +174,7 @@ app.get('/group-details/:id', function(req, res) {
             members: members_arr,
             drivers: drivers_arr,
             passengers: passengers_arr, 
-            group: group_name
+            group: group
         });
       },
         error: function(error) {
@@ -200,7 +198,6 @@ app.get('/ride-details/:id', function(req, res) {
   rideQuery.get(req.params.id, {
     success: function(ride) {
       var group = ride.get("groupId");
-      var group_name = group.get("name");
       var driver = ride.get("driverId");
       var driver_name = driver.get("first_name") + " " + driver.get("last_name");
       var date = moment(ride.get("datetime")).format('h:mm a MM/DD/YYYY');
@@ -222,7 +219,7 @@ app.get('/ride-details/:id', function(req, res) {
             title: "Ride Details", 
             ride_id: ride.id,
             passengers: passenger_arr, 
-            group: group_name,
+            group: group,
             date: date,
             driver_name: driver_name
         });
@@ -312,19 +309,176 @@ app.get('/swap/', function(req, res) {
 
     swapQuery.equalTo("isActive", true).find({
         success: function(swaps) {
-            console.log(swaps); 
-			res.render('pages/swap-board',
-			{
-		        title: "Swapboard",    
-				requests: swaps
-			});
+            //console.log(swaps); 
+          res.render('pages/swap-board',
+          {
+            title: "Swapboard",    
+            requests: swaps
+			    });
         }, 
         error: function(error) {
             console.log(error);
         }
     });
-	
+});
 
+app.get('/fetch_users', function(req, res) {
+  console.log(Parse.User.current());
+  var User = Parse.Object.extend("User");
+  var userQuery = new Parse.Query(User);
+  userQuery.notEqualTo("objectId", Parse.User.current().id);
+  userQuery.find().then(function(result) {
+    var users_json = [];
+    for(var i = 0; i < result.length; i++) {
+      var user = {}
+      user.name = result[i].get("first_name") + " " + result[i].get("last_name");
+      user.id = result[i].id;
+      users_json.push(user);
+    }
+      res.json(users_json);
+  }, function(error) {
+    console.log("Error: " + error.code + " " + error.message);
+  });
+
+});
+
+app.get('/messages', function(req, res) {
+  var curr_user = Parse.User.current();
+  var $$_data_$$ = [];
+
+  var ThreadMember = Parse.Object.extend("thread_member");
+  var threadMemberQuery = new Parse.Query(ThreadMember);
+  threadMemberQuery.include("thread");
+  threadMemberQuery.descending("updatedAt");
+  threadMemberQuery.equalTo("userId", curr_user);
+  threadMemberQuery.find().then(function(threads) {
+    var promises = [];
+    for(var i=0; i<threads.length; i++) {
+      (function(index) {
+        var thread = threads[index].get("thread");
+        var last_message_query = new Parse.Query("thread_message");
+        last_message_query.include("author");
+        
+        var thread_id = thread.id;
+        var thread_subject = thread.get("subject");
+        promises.push(last_message_query.get(thread.get("last_message").id).then(function(last_message) {
+          var item = {
+            thread_id: thread.id,
+            author: last_message.get("author").get("first_name") + " " + last_message.get("author").get("last_name"),
+            num_messages: thread.get("num_messages"),
+            date: moment(last_message.get("createdAt")).format(date_format),
+            subject: thread.get("subject"),
+            message_body: last_message.get("message")
+          };
+          $$_data_$$.push(item);
+
+        }));
+      })(i);
+    }
+    return Parse.Promise.when(promises);
+  }).then(function() {
+    console.log($$_data_$$);
+    res.render('pages/messages/main', {
+      title: "Messages",
+      messages: $$_data_$$
+    });
+  }, function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+  });
+});
+
+app.post('/messages/new', function(req, res) {
+  var selected = req.body.selected;
+  var subject = req.body.subject;
+  var message_body = req.body.message;
+
+  var curr_user = Parse.User.current();
+
+  var thread_message = new Parse.Object("thread_message");
+  thread_message.set("author", curr_user);
+  thread_message.set("message", message_body);
+  thread_message.save().then(function() {
+    var thread = new Parse.Object("thread");
+    thread.set("subject", subject);
+    thread.set("num_messages", 1);
+    thread.set("last_message", thread_message);
+    return thread.save().then(function() {
+      var User = Parse.Object.extend("User");
+      var to_user_query = new Parse.Query(User);
+      return to_user_query.containedIn("objectId", selected).find().then(function(to_users) {
+        var promises = [];
+        for(var i=0; i<to_users.length; i++) {
+          var thread_member = new Parse.Object("thread_member");
+          thread_member.set("userId", to_users[i]);
+          thread_member.set("thread", thread);
+          promises.push(thread_member.save());
+
+          var thread_opened = new Parse.Object("thread_message_opened");
+          thread_opened.set("userId", to_users[i]);
+          thread_opened.set("thread_message", thread_message)
+          thread_opened.set("opened", false);
+          promises.push(thread_opened.save()); 
+        }
+        return Parse.Promise.when(promises);
+      });
+    });
+  }).then(function() {
+    res.redirect('/messages/');
+  }, function(error) {
+    console.log("Error: " + error.code + " " + error.message);
+  });
+
+/*
+  var User = Parse.Object.extend("User");
+  var to_user_query = new Parse.Query(User);
+  to_user_query.containedIn("objectId", selected).find().then(function(to_users) {
+    var promises = [];
+    for(var i=0; i<to_users.length; i++) {
+      var message = new Parse.Object("message");
+      message.set("fromId", curr_user);
+      message.set("toId", to_users[i]);
+      message.set("subject", subject);
+      message.set("message", message_body);
+      message.set("opened", false);
+      promises.push(message.save()); 
+    }
+    return Parse.Promise.when(promises);
+  }).then(function() {
+    res.redirect('/messages/');
+  }, function(error) {
+    console.log("Error: " + error.code + " " + error.message);
+  });
+
+*/
+});
+
+app.get('/message/group/:id', function(req, res) {
+  var group_id = req.params.id
+  var GroupMember = Parse.Object.extend("group_member");
+  var query = new Parse.Query(GroupMember);
+  query.include("userId");
+  query.find("groupId", group_id).then(function(members) {
+    var parents = [];
+    var passengers = [];
+    for(var i = 0; i<members.length; i++) {
+      var user = members[i].get("userId");
+      if(user.get("isParent")) {
+        parents.push(user);
+      } else {
+        passengers.push(user);
+      }
+    }
+
+    res.render('pages/group/message',{
+      title: "Group Message",
+      parents: parents,
+      passengers: passengers
+    });
+  });
+});
+
+app.post('/message/group/new', function(req, res) {
+ console.log(req.body.selected) 
 
 
 });
