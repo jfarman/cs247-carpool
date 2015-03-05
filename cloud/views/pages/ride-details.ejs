@@ -16,12 +16,12 @@
                             <!-- Default panel contents -->
                              <div class="panel-heading">Ride Details</div>
                              <ul class="list-group">
-                                <li class="list-group-item">
-                                    <%=group%>
+                               <a href="/group-details/<%= group.id %>"class="list-group-item">
+                                    <%=group.get("name")%>
                                      <span class="pull-right">
                                         <%=date%>
                                     </span>
-                                </li>
+                                </a>
                             </ul>
                         </div>
                      </div>
