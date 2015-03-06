@@ -311,7 +311,8 @@ app.get('/swap/', function(req, res) {
       var promises = [];
       for(var i=0; i<swaps.length; i++) {
         (function(index) {
-          var swap = swaps[i];
+          var swap = swaps[index];
+          var curr_driver = swap.get("old_driverId").get("first_name") + " " + swap.get("old_driverId").get("last_name"); 
           var note = swap.get("note_text");
           var ride = swap.get("rideId");
           var date = moment(ride.get("datetime")).format(date_format);
@@ -322,6 +323,7 @@ app.get('/swap/', function(req, res) {
             var group_name = group.get("name");
             var item = {
               swap_id: swap.id,
+              curr_driver: curr_driver,
               is_active: is_active,
               date: date,
               group: group_name,
@@ -342,6 +344,85 @@ app.get('/swap/', function(req, res) {
     }, function(error) {
         console.log(error);
     });
+});
+
+app.get('/swap/:id', function(req, res) {
+  var $$_data_$$;
+  var swap_id = req.params.id;
+  var swapQuery = new Parse.Query("swap_requests");
+  swapQuery.include("old_driverId");
+  swapQuery.include("new_driverId");
+  swapQuery.include("rideId");
+  swapQuery.get(swap_id).then(function(swap) {
+      var promises = [];
+      var old_driver = {
+        name: swap.get("old_driverId").get("first_name") + " " + swap.get("old_driverId").get("first_name"),
+        user_id: swap.get("old_driverId").id
+      };
+
+      var new_driver = {
+        name: swap.get("new_driverId") == null ? "" : swap.get("new_driverId").get("first_name") + " " + swap.get("new_driverId").get("last_name"),
+        user_id: swap.get("new_driverId") == null ? null : swap.get("new_driverId").id
+      };
+
+      var is_active = swap.get("isActive");
+      var date = moment(swap.get("rideId").get("datetime")).format(date_format);
+      var note = swap.get("note_text");
+
+      var group_name;
+      var groupQuery = new Parse.Query("group")
+      promises.push(groupQuery.get(swap.get("rideId").get("groupId").id).then(function(group) {
+        group_name = group.get("name");
+      }));
+      
+      var passengers_arr = [];
+      var passengers_query = new Parse.Query("ride_passenger");
+      passengers_query.include("passengerId");
+      passengers_query.equalTo("rideId", swap.get("rideId"));
+      promises.push(passengers_query.find().then(function(passengers) {
+        for(var i=0; i<passengers.length; i++) {
+          passengers_arr.push({
+            name: passengers[i].get("passengerId").get("first_name") + " " + passengers[i].get("passengerId").get("last_name"),
+            user_id: passengers[i].get("passengerId").id
+          });
+        }
+      }));
+      
+      return Parse.Promise.when(promises).then(function() {
+        $$_data_$$ = {
+          swap_id: swap_id,
+          group_name: group_name,
+          date: date,
+          is_active: is_active,
+          old_driver: old_driver,
+          new_driver: new_driver,
+          note: note,
+          passengers: passengers_arr
+        };
+      });
+  }).then(function() {
+    console.log($$_data_$$);
+    res.render('pages/swap/inner-view', {
+      title: "Swap",
+      data: $$_data_$$
+    });
+  }, function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+  });
+});
+
+app.get('/swap/confirm/:id', function(req, res) {
+  var swap_id = req.params.id;
+  var swapQuery = new Parse.Query("swap_requests");
+  swapQuery.get(swap_id).then(function(swap) {
+    swap.set("isActive", false);
+    swap.set("new_driverId", Parse.User.current());
+    return swap.save();
+  }).then(function() {
+    res.redirect('/swap/');
+  }, function(error) {
+      console.log("Error: " + error.code + " " + error.message);
+  });
 });
 
 app.get('/fetch_users', function(req, res) {
