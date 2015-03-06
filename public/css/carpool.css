@@ -1,5 +1,31 @@
 div.padding { padding-top: 50px; }
 
 div.main-container {
-	background-color: #fff;
+	background-color: #eee;
+}
+
+div.message-box {
+  border: 1px solid black; 
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+div.message-subject-header {
+  font-size: 14px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+div.message-input-panel {
+  border: 1px solid #ddd;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #fff;
+}
+
+span.message-body-label {
+  font-size: 12px;
 }
