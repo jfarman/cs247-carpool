@@ -21,7 +21,7 @@
                   <span class="request-date-label col-xs-5 text-right"><%=requests[i].date%></span>
                 </div>
                 <div class="row">
-                  <span class="request-message-label col-xs-7"><%=requests[i].note%></span>
+                  <span class="request-message-label col-xs-7"><strong><%=requests[i].curr_driver%> - </strong><%=requests[i].note%></span>
                   <% if(requests[i].is_active) { %>
                   <span class="col-xs-5 text-right"><span class="label label-danger">Pending</span></span>
                   <% } else { %>
