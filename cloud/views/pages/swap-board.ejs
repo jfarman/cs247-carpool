@@ -9,36 +9,29 @@
 
 <body>
     <div class="container-fluid main-container">
-        <div class="padding"></div>
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <td><b>Day&Time</td></b>
-                            <td><b>Current Driver</td></b>
-                            <td><b>Description</td></b>
-                            <td><b>Action</td></b>
-                        </tr>
-                    </thead>
-					
-					<% for (var request in requests) { %>
-						<tr>
-							<td><%=requests[request].get("rideId").get("datetime") %></td>
-							<td><%=requests[request].get("old_driverId").get("first_name") %> <%=requests[request].get("old_driverId").get("last_name") %></td>
-              <td><%=requests[request].get("note_text") %></td>
-              <td><button type="button" class="btn btn-default" aria-label="Left Align">
-								<i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Pick up shift
-								</button></td>
-							
-						</tr>
-					<% } %>
-
-                </table>
-            </div>
-            <!-- /.col-lg-12 -->
+        <div class="title-header row">
+          <span>Swap Board</span>
         </div>
-        <!-- /.row -->
+        <div class="row">
+          <div class="list-group">
+            <% for(var i=0; i<requests.length; i++) { %>
+              <a href="/swap/<%=requests[i].swap_id%>" class="list-group-item">
+                <div class="row">
+                  <span class="request-group-name-label col-xs-7"><%=requests[i].group%></span>
+                  <span class="request-date-label col-xs-5 text-right"><%=requests[i].date%></span>
+                </div>
+                <div class="row">
+                  <span class="request-message-label col-xs-7"><%=requests[i].note%></span>
+                  <% if(requests[i].is_active) { %>
+                  <span class="col-xs-5 text-right"><span class="label label-danger">Pending</span></span>
+                  <% } else { %>
+                  <span class="col-xs-5 text-right"><span class="label label-success">Complete</span></span>
+                  <% } %>
+                </div>
+              </a>
+            <% } %>
+          </div>
+        </div>
     </div>
     <!-- /.container-fluid -->
 
