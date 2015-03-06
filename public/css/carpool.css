@@ -1,7 +1,15 @@
 div.padding { padding-top: 50px; }
 
+html {
+  background: #eee;
+}
+
 div.main-container {
 	background-color: #eee;
+}
+
+div.background {
+  background: #eee;
 }
 
 div.message-box {
@@ -21,6 +29,8 @@ div.message-subject-header {
 
 div.message-input-panel {
   border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 0px 0px 20px 0px;
   padding: 10px 15px 10px 15px;
   background: #fff;
 }
@@ -57,6 +67,5 @@ span.request-date-label {
 }
 
 span.request-message-label {
-  font-size: 12px;
-  font-style: italic;
+  font-size: 11px;
 }
