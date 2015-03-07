@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
+    <% include ../partials/head %>
+
+</head>
+
+<body>
+    <div class="banner">
+        <h4 class="brand">PARCOOL</h4>
+    </div>
+    <div class="container-fluid main-container">
+        <div class="title-header row">
+          <span>Upcoming</span>
+        </div>
+        <div class="row">
+          <div class="list-group">
+            <% for(var i=0; i<rides.length; i++) { %>
+                <div class="row">
+                  <span class="request-group-name-label col-xs-7"><%=rides[i].get("datetime")%></span>
+                </div>
+            <% } %>
+          </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+
+
+<div class = "navbar navbar-default navbar-fixed-bottom">
+	<div class  ="container">
+		<% include ../partials/footer %>
+	</div>
+</div>
+
+</body>
+
+</html>
+s

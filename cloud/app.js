@@ -445,6 +445,51 @@ app.get('/fetch_users', function(req, res) {
 
 });
 
+app.get('/groups', function(req, res) {
+  var curr_user = Parse.User.current();
+  var GroupMember = Parse.Object.extend("group_member");
+  var query = new Parse.Query(GroupMember);
+  query.include("groupId");
+  query.equalTo("userId", curr_user);
+  query.find().then(function(groups) {
+    var myGroups = [];
+    for(var i = 0; i<groups.length; i++) {
+      var group = groups[i].get("groupId");
+      myGroups.push(group);
+      console.log(group.get("name"));
+    }
+    res.render('pages/groups-index',{
+      title: "My Groups",
+      groups: myGroups
+    });
+  });
+});
+
+app.get('/upcoming-rides/:id', function(req, res) {
+  var curr_user = Parse.User.current();
+  var groupQuery = new Parse.Query("group")
+  groupQuery.get(req.params.id).then(function(group){
+    var ridesQuery = new Parse.Query("ride")
+    ridesQuery.include("groupId");
+    ridesQuery.include("driverId");
+    ridesQuery.equalTo("groupId", group);
+    ridesQuery.find().then(function(rides) {
+      var myRides = [];
+      for(var i=0; i<rides.length; i++) {
+          var ride = rides[i];
+          myRides.push(ride)
+          console.log(ride);
+          var driver = ride.get("driverId");
+      }
+      res.render('pages/upcoming-rides',{
+        title: "Rides for this group",
+        rides: myRides
+      });
+    });
+  });
+});
+
+
 app.get('/messages', function(req, res) {
   var curr_user = Parse.User.current();
   var $$_data_$$ = [];

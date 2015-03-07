@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
+    <% include ../partials/head %>
+
+</head>
+
+<body>
+    <div class="banner">
+        <h4 class="brand">PARCOOL</h4>
+    </div>
+    <div class="container-fluid main-container">
+        <div class="title-header row">
+          <span>My Groups</span>
+        </div>
+        <div class="row">
+          <div class="list-group">
+            <% for(var i=0; i<groups.length; i++) { %>
+              <a href="/upcoming-rides/<%=groups[i].id%>" class="list-group-item">
+                <div class="row">
+                  <span class="request-group-name-label col-xs-7"><%=groups[i].get("name")%></span>
+                </div>
+              </a>
+            <% } %>
+          </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+
+
+<div class = "navbar navbar-default navbar-fixed-bottom">
+	<div class  ="container">
+		<% include ../partials/footer %>
+	</div>
+</div>
+
+</body>
+
+</html>
