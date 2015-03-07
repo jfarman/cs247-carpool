@@ -214,14 +214,21 @@ app.get('/ride-details/:id', function(req, res) {
             var name = user.get("first_name") + " " + user.get("last_name");
             //console.log(name);
             passenger_arr.push(name);
-        }
-        res.render('pages/ride-details', {
+          }
+
+          var swapQuery = new Parse.Query("swap_requests");
+          swapQuery.equalTo("rideId", ride).find().then(function(swap) {
+          var swap_exists = swap.length > 0 ? true : false;
+
+          res.render('pages/ride-details', {
             title: "Ride Details", 
             ride_id: ride.id,
             passengers: passenger_arr, 
             group: group,
             date: date,
-            driver_name: driver_name
+            driver_name: driver_name,
+            swap_exists: swap_exists
+          });
         });
       },
         error: function(error) {
@@ -302,12 +309,28 @@ app.post('/ride/swap', function(req, res) {
 
 app.get('/swap/', function(req, res) {
     var $$_data_$$ = [];
-    var Swap = Parse.Object.extend("swap_requests");
-    var swapQuery = new Parse.Query(Swap);
-	  swapQuery.include("rideId");
-	  swapQuery.include("old_driverId");	
-    swapQuery.descending("createdAt");
-    swapQuery.find().then(function(swaps) {
+    var groupQuery = new Parse.Query("group_member")
+    groupQuery.include("groupId");
+    groupQuery.equalTo("userId", Parse.User.current());
+    groupQuery.find().then(function(group_members) {
+      console.log(group_members);
+      var groups = [];
+      for(var i=0; i<group_members.length; i++) {
+        (function(index) {
+          groups.push(group_members[index].get("groupId"));
+        })(i);
+      }
+      var rideQuery = new Parse.Query("ride");
+      rideQuery.ascending("datetime");
+      rideQuery.containedIn("groupId", groups);
+      return rideQuery.find();
+    }).then(function(rides) {
+      var swapQuery = new Parse.Query("swap_requests");
+      swapQuery.include("rideId");
+      swapQuery.include("old_driverId");
+      swapQuery.containedIn("rideId", rides);
+      return swapQuery.find();
+    }).then(function(swaps) {
       var promises = [];
       for(var i=0; i<swaps.length; i++) {
         (function(index) {
@@ -335,7 +358,7 @@ app.get('/swap/', function(req, res) {
       }
       return Parse.Promise.when(promises);
     }).then(function() {
-      console.log($$_data_$$); 
+      //console.log($$_data_$$); 
       res.render('pages/swap-board',
       {
         title: "Swapboard",    
