@@ -1,5 +1,55 @@
 div.padding { padding-top: 50px; }
 
+div.banner {
+  text-align: center;
+  vertical-align: middle;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  background-color: #1695A3;
+}
+
+div.footer{
+  background-color: #1695A3;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+h4.brand {
+  color: #ACF0F2;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-family: 'Nunito', sans-serif;
+}
+
+p.footer-nav {
+  font-family: 'Nunito', sans-serif;
+  color: #ACF0F2;
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+div.footer-nav-icon{
+  color: #ACF0F2;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+i.footer-nav{
+  color: #ACF0F2;
+  text-decoration: none;
+}
+
+
+.label-complete {
+  background-color: #1695A3;
+}
+
+.label-pending {
+  background-color: #EB7F00;
+}
+
 html {
   background: #eee;
 }

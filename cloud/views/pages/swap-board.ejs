@@ -2,12 +2,15 @@
 <html lang="en">
 
 <head>
-
+    <link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
     <% include ../partials/head %>
 
 </head>
 
 <body>
+    <div class="banner">
+        <h4 class="brand">PARCOOL</h4>
+    </div>
     <div class="container-fluid main-container">
         <div class="title-header row">
           <span>Swap Board</span>
@@ -23,9 +26,9 @@
                 <div class="row">
                   <span class="request-message-label col-xs-7"><strong><%=requests[i].curr_driver%> - </strong><%=requests[i].note%></span>
                   <% if(requests[i].is_active) { %>
-                  <span class="col-xs-5 text-right"><span class="label label-danger">Pending</span></span>
+                  <span class="col-xs-5 text-right"><span class="label label-pending">Pending</span></span>
                   <% } else { %>
-                  <span class="col-xs-5 text-right"><span class="label label-success">Complete</span></span>
+                  <span class="col-xs-5 text-right"><span class="label label-complete">Complete</span></span>
                   <% } %>
                 </div>
               </a>
