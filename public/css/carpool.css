@@ -1,5 +1,82 @@
 div.padding { padding-top: 50px; }
 
-div.main-container {
-	background-color: #fff;
+html {
+  background: #eee;
 }
+
+div.main-container {
+<<<<<<< HEAD
+	background-color: #F5F5F5;
+}
+
+div.detail {
+	background-color: white;
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+=======
+	background-color: #eee;
+}
+
+div.background {
+  background: #eee;
+}
+
+div.message-box {
+  border: 1px solid black; 
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+div.message-subject-header {
+  font-size: 14px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+div.message-input-panel {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 0px 0px 20px 0px;
+  padding: 10px 15px 10px 15px;
+  background: #fff;
+}
+
+span.message-body-label {
+  font-size: 12px;
+}
+
+div.inbox-header {
+  padding: 10px 15px 10px 15px;
+  border: 1px solid #ddd;
+}
+
+div.title-header {
+  font-size: 16px;
+  font-weight: 550;
+  padding: 10px 15px 10px 15px;
+  border: 1px solid #ddd;
+}
+
+div.row-entry {
+  padding: 10px 15px 10px 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+  font-size: 12px;
+}
+
+span.request-group-name-label {
+  font-weight: 600;
+}
+
+span.request-date-label {
+  font-size: 12px;
+}
+
+span.request-message-label {
+  font-size: 11px;
+}
+>>>>>>> origin/master

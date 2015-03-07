@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../partials/head %>
+</head>
+
+<body>
+    <!-- Page Content -->
+    <div class="container-fluid main-container">
+        <div class="row title-header">
+          <span>Swap Details</span>
+        </div>
+
+        <div class="row row-entry">
+          <span><%=data.group_name%></span>
+          <span class="pull-right"><%=data.date%></span>
+        </div>
+        
+        <div class="row title-header">
+          <span>Old Driver</span>
+        </div>
+
+        <div class="row row-entry">
+          <span><%=data.old_driver.name%></span>
+        </div>
+
+        <div class="row title-header">
+          <span>New Driver</span>
+        </div>
+
+        <div class="row row-entry">
+          <% if (data.new_driver.user_id == null ) { %>
+            <span>&nbsp</span>
+          <% } else { %>
+            <span><%=data.new_driver.name%></span>
+          <% } %>
+        </div>
+
+        <div class="row title-header">
+          <span>Swap Status</span>
+        </div>
+
+        <div class="row row-entry">
+        <% if (data.is_active) { %>
+          <span class="label label-danger">Pending</span>
+          <span class="pull-right">
+            <a href="/swap/confirm/<%=data.swap_id%>" class="btn btn-xs btn-primary">Pick up shift</a>
+          </span>
+        <% } else { %>
+          <span class="label label-success">Complete</span>
+        <% } %>
+        </div>
+
+        <div class="row title-header">
+          <span>Passengers</span>
+        </div>
+
+        <% for(var i=0; i<data.passengers.length; i++) { %>
+          <div class="row row-entry">
+            <span><%=data.passengers[i].name%></span>
+          </div>
+        <% } %>
+
+        <div class="padding"></div>
+    </div>
+
+    <% include ../../partials/footer %>
+
+  </body>
+</html>

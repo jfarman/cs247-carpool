@@ -9,23 +9,22 @@
     <!-- Page Content -->
     <div class="container-fluid main-container">
         <div class="padding"></div>
+        <div class="row inbox-header"><span><i class="icon-inbox"></i> <strong>Inbox</strong></span></div>
         <div class="row">
-            <div class="col-lg-12">
-              <div class="list-group">
-                <% for(var i=0; i<messages.length; i++) { %>
-                    <a href="/message/<%=messages[i].thread_id%>" class="list-group-item">
-                    <div>
-                      <span class="message-from-label"><%=messages[i].author%></span>
-                      <span class="message-count-label"><strong><%=messages[i].num_messages%></strong></span>
-                      <span class="message-date-label pull-right"><%=messages[i].date%></span>
-                    </div>
-                    <div>
-                      <span class="message-subject-label"><strong><%=messages[i].subject%> - </strong></span>
-                      <span class="message-body-label"><%=messages[i].message_body%></span>
-                    </div> 
-                    </a>
-                <% } %>
-              </div>
+            <div class="list-group">
+              <% for(var i=0; i<messages.length; i++) { %>
+                  <a href="/messages/<%=messages[i].thread_id%>" class="list-group-item">
+                  <div>
+                    <span class="message-from-label"><%=messages[i].author%></span>
+                    <span class="message-count-label"><strong><%=messages[i].num_messages%></strong></span>
+                    <span class="message-date-label pull-right"><small><%=messages[i].date%></small></span>
+                  </div>
+                  <div>
+                    <span class="message-subject-label"><strong><small><%=messages[i].subject%> - </small></strong></span>
+                    <span class="message-body-label"><%=messages[i].message_body%></span>
+                  </div> 
+                  </a>
+              <% } %>
             </div>
             <!-- /.col-lg-12 -->
         </div>
