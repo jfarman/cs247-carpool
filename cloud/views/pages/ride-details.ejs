@@ -36,7 +36,9 @@
                                 <li class="list-group-item">
                                     <%=driver_name%>
                                     <span class="pull-right">
+                                      <% if (!swap_exists) { %> 
                                         <a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary">Request Swap</a>
+                                        <% } %>
                                     </span>
                                 </li>
                             </ul>
