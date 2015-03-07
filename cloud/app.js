@@ -356,7 +356,7 @@ app.get('/swap/:id', function(req, res) {
   swapQuery.get(swap_id).then(function(swap) {
       var promises = [];
       var old_driver = {
-        name: swap.get("old_driverId").get("first_name") + " " + swap.get("old_driverId").get("first_name"),
+        name: swap.get("old_driverId").get("first_name") + " " + swap.get("old_driverId").get("last_name"),
         user_id: swap.get("old_driverId").id
       };
 
