@@ -13,14 +13,18 @@
     </div>
     <div class="container-fluid main-container">
         <div class="title-header row">
-          <span>Upcoming</span>
+          <span>Upcoming rides for <%=group.get("name")%></span>
         </div>
         <div class="row">
           <div class="list-group">
             <% for(var i=0; i<rides.length; i++) { %>
-                <div class="row">
-                  <span class="request-group-name-label col-xs-7"><%=rides[i].get("datetime")%></span>
-                </div>
+                <a href="/ride-details/<%= rides[i].id%>" 
+                class="list-group-item">
+                    <%var date = rides[i].get("datetime")%>
+                    <%var new_date = 
+                        moment(date).format('ddd h:mm a MM/DD/YYYY')%>
+                    <%=new_date%>
+                </a>
             <% } %>
           </div>
         </div>
@@ -37,4 +41,3 @@
 </body>
 
 </html>
-s

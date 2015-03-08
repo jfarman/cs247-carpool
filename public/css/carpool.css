@@ -1,5 +1,16 @@
 div.padding { padding-top: 50px; }
 
+.btn-teal {
+  color: #fff;
+  background-color: #1695A3;
+  border-color: #1695a3;
+}
+
+div.btn-wrapper {
+  text-align: center;
+  padding: 10px 10px;
+}
+
 div.banner {
   text-align: center;
   vertical-align: middle;
@@ -8,10 +19,16 @@ div.banner {
   background-color: #1695A3;
 }
 
+.list-group-item.date-heading {
+  color: #ACF0F2;
+  background-color: #1695A3;
+}
+
 div.footer{
   background-color: #1695A3;
   padding-bottom: 10px;
   padding-top: 10px;
+  text-decoration: none;
 }
 
 h4.brand {
@@ -27,6 +44,7 @@ p.footer-nav {
   text-align: center;
   margin-top: 0px;
   margin-bottom: 0px;
+  text-decoration: none;
 }
 
 div.footer-nav-icon{

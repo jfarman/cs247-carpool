@@ -8,40 +8,39 @@
 </head>
 
 <body>
-            <div class="container-fluid main-container">
-                <div class="padding"></div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <!-- Default panel contents -->
-                             <div class="panel-heading">Group Details</div>
-                             <ul class="list-group">
-                                <li class="list-group-item">
-                                    <%=group.get("name")%>
-                                </li>
-                            </ul>
-                        </div>
-                     </div>
-                 </div>
-                 <!-- /.row -->
-                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <!-- Default panel contents -->
-                             <div class="panel-heading">Group Members (parents)</div>
-                             <ul class="list-group">
-                                <% for (var d in drivers) {%>
-                                    <li class="list-group-item"><%=drivers[d]%></li>
+    <div class="banner">
+        <h4 class="brand">PARCOOL</h4>
+    </div> 
+    <div class="container-fluid main-container">
+        <div class="title-header row">
+            <div class = "btn-wrapper">
+                <a href="/upcoming-rides/<%=group.id%>" class="btn btn-teal">
+                    see upcoming rides
+                </a>
+            </div>
+        </div>
+        <!-- /. title-header row -->
+           <div class="row">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">Group Details</div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <%=group.get("name")%>
+                            </li>
+                        </ul>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">Group Members (parents)</div>
+                        <ul class="list-group">
+                            <% for (var d in drivers) {%>
+                                <li class="list-group-item"><%=drivers[d]%></li>
                                 <% }%>
-                            </ul>
-                        </div>
-                     </div>
-                        <!-- /.col-lg-12 -->
-                 </div>
-                <!-- /.row -->
+                        </ul>
+            </div>
+            <!-- /.row -->
                  <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
                             <!-- Default panel contents -->
                              <div class="panel-heading">Group Members (kids) </div>
                              <ul class="list-group">
@@ -49,12 +48,9 @@
                                     <li class="list-group-item"><%=passengers[p]%></li>
                                 <% }%>
                             </ul>
-                        </div>
-                     </div>
-                        <!-- /.col-lg-12 -->
                  </div>
                 <div class="row">
-                  <a href="/message/group/<%= group.id %>" class="btn btn-primary">Message</a>
+                  <a href="/message/group/<%= group.id %>" class="btn btn-teal">Message</a>
                 </div>
                 <!-- /.row -->
             </div>

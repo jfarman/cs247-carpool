@@ -128,7 +128,7 @@ app.get('/', function(req, res) {
                     rides[results[result].get("datetime").toDateString()] = [];
                 }
                 rides[results[result].get("datetime").toDateString()].push(results[result]);
-                var date = moment(results[result].get("datetime")).format('h:mm a MM/DD/YYYY');
+                var date = moment(results[result].get("datetime")).format('h:mm a');
                 rides[results[result].get("datetime").toDateString()][rides[results[result].get("datetime").toDateString()].length-1].date = date
             }
 				res.render('pages/index', {
@@ -506,7 +506,9 @@ app.get('/upcoming-rides/:id', function(req, res) {
       }
       res.render('pages/upcoming-rides',{
         title: "Rides for this group",
-        rides: myRides
+        rides: myRides,
+        moment: moment,
+        group: group
       });
     });
   });
