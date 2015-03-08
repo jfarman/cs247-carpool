@@ -1,12 +1,13 @@
 {
     "applications": {
         "_default": {
-            "link": "cs247"
+            "link": "cs247carpool"
         }, 
-        "cs247": {
-            "applicationId": "AAPG8rW29toO8n9dtnDgvE3Pown0dOObhCYGWwDc", 
-            "javascriptKey": "AnSqYJ1QunLJ0fEIpXagrLb10XKk3LufegTKhPeG", 
-            "masterKey": "1an58u5V5nEkGeqRwEWdUwAfaXqk7Psq1pigsyX6"
+        "cs247carpool": {
+            "applicationId": "9xPBTlM204Jbn3ijd45g4NKnSw19JeOjgpgdIwLS", 
+            "clientKey": "9itYNZAhKbQiRWrtxFoVj4kOOv24jSr624hnihzO",
+            "javascriptKey": "adkGf2Zv7T6hSeEb16XedCuguxTRt3U71Lc2xWNj",
+            "masterKey": "MVWKooY8BmHXs4RGdBzfxqWgE7vJRYbDIsLqoNrY"
         }
     }, 
     "global": {
