@@ -8,9 +8,7 @@
 </head>
 
 <body>
-    <div class="banner">
-        <h4 class="brand">PARCOOL</h4>
-    </div>
+    <% include ../../partials/brand_header %>
     <div class="container-fluid main-container">
         <div class="title-header row">
           <span>Upcoming rides for <%=group.get("name")%></span>
@@ -31,12 +29,11 @@
     </div>
     <!-- /.container-fluid -->
 
-
 <div class = "navbar navbar-default navbar-fixed-bottom">
 	<div class  ="container">
-		<% include ../partials/footer %>
+		<% include ../partials/footer/groups %>
+
 	</div>
-</div>
 
 </body>
 
