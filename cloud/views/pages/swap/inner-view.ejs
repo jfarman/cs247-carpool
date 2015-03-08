@@ -13,52 +13,45 @@
           <span>Swap Details</span>
         </div>
 
+
         <div class="row row-entry">
-          <span><%=data.group_name%></span>
+          <span><strong>Group</strong></span>
+          <span class="pull-right"><%=data.group_name%></span>
+        </div>
+
+        <div class="row row-entry">
+          <span><strong>Date</strong></span>  
           <span class="pull-right"><%=data.date%></span>
         </div>
         
-        <div class="row title-header">
-          <span>Old Driver</span>
+        <div class="row row-entry">
+          <span><strong>Old Driver</strong></span>  
+          <span class="pull-right"><%=data.old_driver.name%></span>
         </div>
+
+        <% if (data.new_driver.user_id != null ) { %>
+        <div class="row row-entry">
+          <span><strong>New Driver</strong></span>  
+            <span class="pull-right"><%=data.new_driver.name%></span>
+        </div>
+        <% } %>
 
         <div class="row row-entry">
-          <span><%=data.old_driver.name%></span>
-        </div>
-
-        <div class="row title-header">
-          <span>New Driver</span>
-        </div>
-
-        <div class="row row-entry">
-          <% if (data.new_driver.user_id == null ) { %>
-            <span>&nbsp</span>
+          <span><strong>Swap Status</strong></span>  
+          <% if (data.is_active) { %>
+            <span class="pull-right label label-pending">Pending</span>
           <% } else { %>
-            <span><%=data.new_driver.name%></span>
+            <span class="pull-right label label-complete">Complete</span>
           <% } %>
         </div>
 
-        <div class="row title-header">
-          <span>Swap Status</span>
-        </div>
-
         <div class="row row-entry">
-        <% if (data.is_active) { %>
-          <span class="label label-pending">Pending</span>
-        <% } else { %>
-          <span class="label label-complete">Complete</span>
-        <% } %>
+          <span><strong>Passengers</strong></span>
+          <% for(var i=0; i<data.passengers.length; i++) { %>
+          <span class="pull-right"><%=data.passengers[i].name%></span></br>
+          <% } %>
         </div>
 
-        <div class="row title-header">
-          <span>Passengers</span>
-        </div>
-
-        <% for(var i=0; i<data.passengers.length; i++) { %>
-          <div class="row row-entry">
-            <span><%=data.passengers[i].name%></span>
-          </div>
-        <% } %>
     
         <% if (data.is_active) { %>
 	        <div class = "btn-wrapper">
