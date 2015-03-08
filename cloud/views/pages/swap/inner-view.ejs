@@ -7,6 +7,7 @@
 
 <body>
     <!-- Page Content -->
+    <% include ../partials/brand_header %>
     <div class="container-fluid main-container">
         <div class="row title-header">
           <span>Swap Details</span>
@@ -43,12 +44,9 @@
 
         <div class="row row-entry">
         <% if (data.is_active) { %>
-          <span class="label label-danger">Pending</span>
-          <span class="pull-right">
-            <a href="/swap/confirm/<%=data.swap_id%>" class="btn btn-xs btn-primary">Pick up shift</a>
-          </span>
+          <span class="label label-pending">Pending</span>
         <% } else { %>
-          <span class="label label-success">Complete</span>
+          <span class="label label-complete">Complete</span>
         <% } %>
         </div>
 
@@ -61,15 +59,25 @@
             <span><%=data.passengers[i].name%></span>
           </div>
         <% } %>
-
-        <div class="padding"></div>
+    
+        <% if (data.is_active) { %>
+	        <div class = "btn-wrapper">
+	            <a href="/swap/confirm/<%=data.swap_id%>" 
+	               class="btn btn-lg btn-teal">
+	                 pick up shift
+	            </a>
+	        </div>
+	    <% } %>
     </div>
+
 
 <div class = "navbar navbar-default navbar-fixed-bottom">
 	<div class  ="container">
-		<% include ../partials/footer %>
+		<% include ../../partials/footer/swaps %>
+	
 	</div>
 </div>
+
 
   </body>
 </html>

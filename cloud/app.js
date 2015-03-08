@@ -5,7 +5,7 @@ Parse.initialize("9xPBTlM204Jbn3ijd45g4NKnSw19JeOjgpgdIwLS", "adkGf2Zv7T6hSeEb16
 var express = require('express');
 var app = express();
 var moment = require('moment');
-var date_format = "h:mm a MM/DD/YYYY";
+var date_format = "ddd h:mm a MM/DD/YY";
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates

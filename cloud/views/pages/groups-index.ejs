@@ -8,12 +8,13 @@
 </head>
 
 <body>
-    <div class="banner">
-        <h4 class="brand">PARCOOL</h4>
-    </div>
+    <% include ../partials/brand_header %>
     <div class="container-fluid main-container">
         <div class="title-header row">
           <span>My Groups</span>
+          <span class="pull-right">
+            <i class = "fa fa-plus teal-icon fa-1x"></i>
+          </span>
         </div>
         <div class="row">
           <div class="list-group">
@@ -32,7 +33,7 @@
 
 <div class = "navbar navbar-default navbar-fixed-bottom">
 	<div class  ="container">
-		<% include ../partials/footer %>
+      <% include ../partials/footer/groups %>
 	</div>
 </div>
 
