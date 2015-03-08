@@ -1,16 +1,24 @@
 // Parse initialization
 Parse.initialize("9xPBTlM204Jbn3ijd45g4NKnSw19JeOjgpgdIwLS", "adkGf2Zv7T6hSeEb16XedCuguxTRt3U71Lc2xWNj");
+var parseExpressHttpsRedirect = require('parse-express-https-redirect');
+var parseExpressCookieSession = require('parse-express-cookie-session');
+
 
 // These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
 var app = express();
 var moment = require('moment');
+//var cookieParser = require('cookie-parser')
 var date_format = "ddd h:mm a MM/DD/YY";
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
 app.set('view engine', 'ejs');    // Set the template engine
+app.use(parseExpressHttpsRedirect());
 app.use(express.bodyParser());    // Middleware for reading request body
+app.use(express.cookieParser('YOUR_SIGNING_SECRET'));
+app.use(parseExpressCookieSession({ cookie: {maxAge: 3600000 }, fetchUser: true }));
+//app.use(cookieParser());
 
 // This is an example of hooking up a request handler with a specific request
 // path and HTTP verb using the Express routing API.
@@ -113,8 +121,10 @@ app.get('/blank', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-
 	var user = Parse.User.current();
+  //console.log("test");
+  //console.log("user", user);
+
 	//user.fetch();
 	var ride = Parse.Object.extend("ride");
 	var query = new Parse.Query(ride);
@@ -321,7 +331,7 @@ app.get('/swap/', function(req, res) {
         })(i);
       }
       var rideQuery = new Parse.Query("ride");
-      rideQuery.ascending("datetime");
+      rideQuery.descending("datetime");
       rideQuery.containedIn("groupId", groups);
       return rideQuery.find();
     }).then(function(rides) {
@@ -338,7 +348,6 @@ app.get('/swap/', function(req, res) {
           var curr_driver = swap.get("old_driverId").get("first_name") + " " + swap.get("old_driverId").get("last_name"); 
           var note = swap.get("note_text");
           var ride = swap.get("rideId");
-          var date = moment(ride.get("datetime")).format(date_format);
           var is_active = swap.get("isActive");
           
           var groupQuery = new Parse.Query("group");
@@ -348,7 +357,7 @@ app.get('/swap/', function(req, res) {
               swap_id: swap.id,
               curr_driver: curr_driver,
               is_active: is_active,
-              date: date,
+              date: ride.get("datetime"),
               group: group_name,
               note: note
             };
@@ -358,6 +367,18 @@ app.get('/swap/', function(req, res) {
       }
       return Parse.Promise.when(promises);
     }).then(function() {
+      $$_data_$$ = $$_data_$$.sort(function(a, b) {
+        if(a.date < b.date) {
+          return -1;
+        } else if(a.date > b.date) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      for(var i=0; i<$$_data_$$.length; i++) {
+        $$_data_$$[i].date = moment($$_data_$$[i].date).format(date_format);
+      }
       //console.log($$_data_$$); 
       res.render('pages/swap-board',
       {
@@ -424,7 +445,7 @@ app.get('/swap/:id', function(req, res) {
         };
       });
   }).then(function() {
-    console.log($$_data_$$);
+    //console.log($$_data_$$);
     res.render('pages/swap/inner-view', {
       title: "Swap",
       data: $$_data_$$
@@ -557,7 +578,7 @@ app.get('/messages', function(req, res) {
     }
     return Parse.Promise.when(promises);
   }).then(function() {
-    console.log($$_data_$$);
+    //console.log($$_data_$$);
     res.render('pages/messages/main', {
       title: "Messages",
       messages: $$_data_$$
