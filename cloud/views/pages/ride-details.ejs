@@ -8,61 +8,64 @@
 </head>
 
 <body>
-            <div class="container-fluid main-container">
-                <div class="padding"></div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <!-- Default panel contents -->
-                             <div class="panel-heading">Ride Details</div>
-                             <ul class="list-group">
-                               <a href="/group-details/<%= group.id %>"class="list-group-item">
-                                    <%=group.get("name")%>
-                                     <span class="pull-right">
-                                        <%=date%>
-                                    </span>
-                                </a>
-                            </ul>
-                        </div>
-                     </div>
-                 </div>
-                 <!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <!-- Default panel contents -->
-                             <div class="panel-heading">Driver</div>
-                             <ul class="list-group">
-                                <li class="list-group-item">
-                                    <%=driver_name%>
-                                    <span class="pull-right">
-                                      <% if (!swap_exists) { %> 
-                                        <a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary">Request Swap</a>
-                                        <% } %>
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                     </div>
-                 </div>
-                 <!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <!-- Default panel contents -->
-                             <div class="panel-heading">Ride Passengers</div>
-                             <ul class="list-group">
-                                <% for (var p in passengers) {%>
-                                    <li class="list-group-item"><%=passengers[p]%></li>
-                                <% }%>
-                            </ul>
-                        </div>
-                     </div>
-                 </div>
-                    <!-- /.col-lg-12 -->
+    <div class="banner">
+        <h4 class="brand">PARCOOL</h4>
+    </div>
+    <div class="container-fluid main-container">
+        <div class="title-header row">
+            <span>Ride Details</span>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Ride Details</div>
+                    <ul class="list-group">
+                            <a href="/group-details/<%= group.id %>"class="list-group-item">
+                               <%=group.get("name")%>
+                                <span class="pull-right">
+                                    <%=date%>
+                                </span>
+                           </a>
+                    </ul>
                 </div>
-                <!-- /.row -->
             </div>
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Driver</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <%=driver_name%>
+                            <span class="pull-right">
+                                <% if (!swap_exists) { %> 
+                                    <a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary">Request Swap</a>
+                                <% } %>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                 <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Ride Passengers</div>
+                    <ul class="list-group">
+                        <% for (var p in passengers) {%>
+                             <li class="list-group-item"><%=passengers[p]%></li>
+                        <% }%>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                <!-- /.row -->
+    </div>
             <!-- /.container-fluid -->
             <!--% include ../partials/nav %-->
 

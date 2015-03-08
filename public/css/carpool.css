@@ -6,6 +6,10 @@ div.padding { padding-top: 50px; }
   border-color: #1695a3;
 }
 
+.teal-icon {
+  color: #1695a3;
+}
+
 div.btn-wrapper {
   text-align: center;
   padding: 10px 10px;
