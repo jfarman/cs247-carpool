@@ -52,7 +52,7 @@ app.get('/', function(req, res) {
     var ride = Parse.Object.extend("ride");
     var query = new Parse.Query(ride);
     query.equalTo("driverId", Parse.User.current());
-      query.include("groupId");
+    query.include("groupId");
     query.find({
       success: function(results){
               var rides = {};
@@ -796,7 +796,8 @@ app.get('/messages/group/:id', function(req, res) {
       var GroupMember = Parse.Object.extend("group_member");
       var query = new Parse.Query(GroupMember);
       query.include("userId");
-      query.find("groupId", group_id).then(function(members) {
+      query.equalTo("groupId", group);
+      query.find().then(function(members) {
         var parents = [];
         var passengers = [];
         for(var i = 0; i<members.length; i++) {
@@ -811,6 +812,12 @@ app.get('/messages/group/:id', function(req, res) {
             passengers.push(user);
           }
         }
+        var arrayUnique = function(a) {
+            return a.reduce(function(p, c) {
+                if (p.indexOf(c) < 0) p.push(c);
+                return p;
+            }, []);
+        };
 
         res.render('pages/group/message',{
           title: "Group Message",
