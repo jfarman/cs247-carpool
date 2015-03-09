@@ -43,114 +43,40 @@ app.post('/login', function(req, res) {
     });
 });
 
-app.get('/flot', function(req, res) {
-  res.render('pages/flot',
-      {
-        title: "Flot Charts"    
-      });
-});
-
-app.get('/morris', function(req, res) {
-  res.render('pages/morris',
-      {
-        title: "Morris Charts"    
-      });
-});
-
-app.get('/tables', function(req, res) {
-  res.render('pages/tables',
-      {
-        title: "Tables"    
-      });
-});
-
-app.get('/forms', function(req, res) {
-  res.render('pages/forms',
-      {
-        title: "Forms"    
-      });
-});
-
-app.get('/panels-wells', function(req, res) {
-  res.render('pages/panels-wells',
-      {
-        title: "Paensl and Wells"    
-      });
-});
-
-app.get('/buttons', function(req, res) {
-  res.render('pages/buttons',
-      {
-        title: "Buttons"    
-      });
-});
-
-app.get('/notifications', function(req, res) {
-  res.render('pages/notifications',
-      {
-        title: "Notifications"    
-      });
-});
-
-app.get('/typography', function(req, res) {
-  res.render('pages/typography',
-      {
-        title: "Typography"    
-      });
-});
-
-app.get('/icons', function(req, res) {
-  res.render('pages/icons',
-      {
-        title: "Icons"    
-      });
-});
-
-app.get('/grid', function(req, res) {
-  res.render('pages/grid',
-      {
-        title: "Grid"    
-      });
-});
-
-app.get('/blank', function(req, res) {
-  res.render('pages/blank',
-      {
-        title: "Blank Page"    
-      });
-});
-
 app.get('/', function(req, res) {
 	var user = Parse.User.current();
-  //console.log("test");
-  //console.log("user", user);
 
-	//user.fetch();
-	var ride = Parse.Object.extend("ride");
-	var query = new Parse.Query(ride);
-	query.equalTo("driverId", Parse.User.current());
-    query.include("groupId");
-	query.find({
-		success: function(results){
-            var rides = {};
-            for (var result in results) {
-                if (typeof rides[results[result].get("datetime").toDateString()] == "undefined" ) {
-                    rides[results[result].get("datetime").toDateString()] = [];
-                }
-                rides[results[result].get("datetime").toDateString()].push(results[result]);
-                var date = moment(results[result].get("datetime")).format('h:mm a');
-                rides[results[result].get("datetime").toDateString()][rides[results[result].get("datetime").toDateString()].length-1].date = date
-            }
-				res.render('pages/index', {
-					title: "Rides",
-					rides: rides
-				});
-				
-		},
-		error: function(error){
-			console.log(error);
-		}
-	});
+  if(user) {
+    var ride = Parse.Object.extend("ride");
+    var query = new Parse.Query(ride);
+    query.equalTo("driverId", Parse.User.current());
+      query.include("groupId");
+    query.find({
+      success: function(results){
+              var rides = {};
+              for (var result in results) {
+                  if (typeof rides[results[result].get("datetime").toDateString()] == "undefined" ) {
+                      rides[results[result].get("datetime").toDateString()] = [];
+                  }
+                  rides[results[result].get("datetime").toDateString()].push(results[result]);
+                  var date = moment(results[result].get("datetime")).format('h:mm a');
+                  rides[results[result].get("datetime").toDateString()][rides[results[result].get("datetime").toDateString()].length-1].date = date
+              }
+          res.render('pages/index', {
+            title: "Rides",
+            rides: rides
+          });
+          
+      },
+      error: function(error){
+        console.log(error);
+      }
+    });
+  } else {
+    res.render('pages/login', {
+        title: "Login"    
+    });
+  }
 });
 
 app.get('/group-details/:id', function(req, res) {
@@ -323,7 +249,7 @@ app.get('/swap/', function(req, res) {
     groupQuery.include("groupId");
     groupQuery.equalTo("userId", Parse.User.current());
     groupQuery.find().then(function(group_members) {
-      console.log(group_members);
+      //console.log(group_members);
       var groups = [];
       for(var i=0; i<group_members.length; i++) {
         (function(index) {
