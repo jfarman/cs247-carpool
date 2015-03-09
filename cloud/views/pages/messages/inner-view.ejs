@@ -18,7 +18,11 @@
               <% for(var i=0; i<messages.length; i++) { %>
                 <div class="list-group-item">
                   <div class="row">
-                    <span class="col-xs-9"><strong><small><%= messages[i].author %></small></strong></span>
+                    <span class="col-xs-9 <%=messages[i].author_style%>">
+                      <strong><small>
+                        <%= messages[i].author %>
+                      </small></strong>
+                    </span>
                     <span class="col-xs-3 text-right"><small><%= messages[i].date %></small></span>
                   </div>
                   <div class="row">
@@ -43,7 +47,7 @@
                 <input type="hidden" name="thread_id" value="<%=thread_id%>">
               </div>
 
-              <button class="btn btn-primary" type="submit">Submit</button>
+              <button class="btn btn-teal" type="submit">Submit</button>
               <button class="btn btn-default" type="cancel">Cancel</button>
             </form>
           </div>
