@@ -582,7 +582,7 @@ app.get('/messages/:id', function(req, res) {
     var thread_id = req.params.id;
     var $$_data_$$ = [];
     var thread_subject;
-    var thread_members = [];
+    var thread_members = "";
 
     var thread_query = new Parse.Query("thread");
     thread_query.get(thread_id).then(function(thread) {
@@ -593,8 +593,12 @@ app.get('/messages/:id', function(req, res) {
         for(var i=0; i<thread_members_result.length; i++) {
           if(thread_members_result[i].get("userId").id != Parse.User.current().id) {
             var member = thread_members_result[i].get("userId");
-            var name = member.get("first_name") + " " + member.get("last_name");
-            thread_members.push(name);
+            var name = member.get("first_name");
+            if(i == 0) {
+              thread_members = name;
+            } else {
+              thread_members += ", " + name;
+            }  
           }
         }
 
@@ -626,8 +630,6 @@ app.get('/messages/:id', function(req, res) {
           };
           $$_data_$$.push(item);
       }
-      //console.log($$_data_$$);
-      console.log(thread_members);
       res.render('pages/messages/inner-view', {
         title: "Message",
         thread_subject: thread_subject,
@@ -734,29 +736,37 @@ app.post('/messages/reply', function(req, res) {
 app.get('/messages/group/:id', function(req, res) {
   if(Parse.User.current()) {
     var group_id = req.params.id
-    var GroupMember = Parse.Object.extend("group_member");
-    var query = new Parse.Query(GroupMember);
-    query.include("userId");
-    query.find("groupId", group_id).then(function(members) {
-      var parents = [];
-      var passengers = [];
-      for(var i = 0; i<members.length; i++) {
-        var user = members[i].get("userId");
-        if(user.id == Parse.User.current().id) {
-          continue;
+    var group_name;
+  
+    var group_query = Parse.Query("group");
+    group_query.get(group_id).then(function(group) {
+      group_name = group.get("name"); 
+
+      var GroupMember = Parse.Object.extend("group_member");
+      var query = new Parse.Query(GroupMember);
+      query.include("userId");
+      query.find("groupId", group_id).then(function(members) {
+        var parents = [];
+        var passengers = [];
+        for(var i = 0; i<members.length; i++) {
+          var user = members[i].get("userId");
+          if(user.id == Parse.User.current().id) {
+            continue;
+          }
+
+          if(user.get("isParent")) {
+            parents.push(user);
+          } else {
+            passengers.push(user);
+          }
         }
 
-        if(user.get("isParent")) {
-          parents.push(user);
-        } else {
-          passengers.push(user);
-        }
-      }
-
-      res.render('pages/group/message',{
-        title: "Group Message",
-        parents: parents,
-        passengers: passengers
+        res.render('pages/group/message',{
+          title: "Group Message",
+          parents: parents,
+          passengers: passengers,
+          group_name: group_name
+        });
       });
     });
   } else {
