@@ -582,15 +582,29 @@ app.get('/messages/:id', function(req, res) {
     var thread_id = req.params.id;
     var $$_data_$$ = [];
     var thread_subject;
+    var thread_members = [];
 
     var thread_query = new Parse.Query("thread");
     thread_query.get(thread_id).then(function(thread) {
-      thread_subject = thread.get("subject");
-      var thread_messages_query = new Parse.Query("thread_message"); 
-      thread_messages_query.ascending("createdAt");
-      thread_messages_query.include("author");
-      thread_messages_query.equalTo("thread", thread);
-      return thread_messages_query.find();
+      var thread_members_query = new Parse.Query("thread_member");
+      thread_members_query.equalTo("thread", thread);
+      thread_members_query.include("userId");
+      return thread_members_query.find().then(function(thread_members_result) {
+        for(var i=0; i<thread_members_result.length; i++) {
+          if(thread_members_result[i].get("userId").id != Parse.User.current().id) {
+            var member = thread_members_result[i].get("userId");
+            var name = member.get("first_name") + " " + member.get("last_name");
+            thread_members.push(name);
+          }
+        }
+
+        thread_subject = thread.get("subject");
+        var thread_messages_query = new Parse.Query("thread_message"); 
+        thread_messages_query.ascending("createdAt");
+        thread_messages_query.include("author");
+        thread_messages_query.equalTo("thread", thread);
+        return thread_messages_query.find();
+      });
     }).then(function(thread_messages) {
       for(var i=0; i<thread_messages.length; i++) {
           var date = thread_messages[i].createdAt;
@@ -612,11 +626,13 @@ app.get('/messages/:id', function(req, res) {
           $$_data_$$.push(item);
       }
       //console.log($$_data_$$);
+      console.log(thread_members);
       res.render('pages/messages/inner-view', {
         title: "Message",
         thread_subject: thread_subject,
         messages: $$_data_$$,
-        thread_id: thread_id
+        thread_id: thread_id,
+        thread_members: thread_members
       });
     }, function(error) {
       console.log(error);
@@ -714,7 +730,7 @@ app.post('/messages/reply', function(req, res) {
   }
 });
 
-app.get('/message/group/:id', function(req, res) {
+app.get('/messages/group/:id', function(req, res) {
   if(Parse.User.current()) {
     var group_id = req.params.id
     var GroupMember = Parse.Object.extend("group_member");
@@ -725,6 +741,10 @@ app.get('/message/group/:id', function(req, res) {
       var passengers = [];
       for(var i = 0; i<members.length; i++) {
         var user = members[i].get("userId");
+        if(user.id == Parse.User.current().id) {
+          continue;
+        }
+
         if(user.get("isParent")) {
           parents.push(user);
         } else {
