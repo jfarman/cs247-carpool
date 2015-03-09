@@ -13,6 +13,11 @@
     <div class="container-fluid main-container">
         <div class="row title-header">
           <span>Ride Details</span>
+            <span class="pull-right edit">
+            <i class = "fa fa-edit edit-icon fa-1x"></i>
+            edit
+          </span>
+
         </div>
 
 
@@ -70,7 +75,7 @@
 
     <% if (!swap_exists) { %>
         <div class = "btn-wrapper">
-            <a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary">
+            <a href="/ride/swap/<%=ride_id%>" class="btn btn-teal">
                 Request Swap
             </a>
         </div>

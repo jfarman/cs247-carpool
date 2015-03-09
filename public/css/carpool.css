@@ -24,6 +24,15 @@ div.group-members {
   color: #1695a3;
 }
 
+span.edit{
+  color: #1695a3;
+}
+
+.edit-icon {
+  color: #1695a3;
+  vertical-align: middle;
+}
+
 div.btn-wrapper {
   text-align: center;
   padding: 10px 10px;
