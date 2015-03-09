@@ -76,6 +76,7 @@
         </div>
     <% } %>
 
+
 <div class = "navbar navbar-default navbar-fixed-bottom">
 	<div class  ="container">
 		<% include ../partials/footer/rides %>
@@ -86,3 +87,9 @@
 </body>
 
 </html>
+
+
+<!--% if (!swap_exists) { %--> 
+    <!--<a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary"--><!--Request Swap</a>--> 
+<!--% } %>
+
