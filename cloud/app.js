@@ -620,6 +620,7 @@ app.get('/messages/:id', function(req, res) {
           var item = {
             author: author.get("first_name") + " " + author.get("last_name"),
             curr_user: author.id == curr_user.id ? true : false,
+            author_style: author.id == curr_user.id ? "msg-curr-user" : "msg-default",
             body: message,
             date: date
           };
