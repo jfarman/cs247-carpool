@@ -4,6 +4,16 @@ div.padding {
 }
 
 
+.btn-orange {
+  color: #fff;
+  background-color: #EB7F00;
+  border-color: #EB7F00;
+}
+
+div.group-members {
+  padding-top: 10px;
+}
+
 .btn-teal {
   color: #fff;
   background-color: #1695A3;
@@ -17,6 +27,16 @@ div.padding {
 div.btn-wrapper {
   text-align: center;
   padding: 10px 10px;
+}
+
+div.btn-row-wrapper {
+  text-align: center;
+  padding: 10px 10px;
+}
+
+div.btn-space {
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 div.banner {

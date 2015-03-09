@@ -8,23 +8,26 @@
 </head>
 
 <body>
-
+    <% include ../../partials/brand_header %>
     <div class="container-fluid main-container">
-        <div class="padding"></div>
+        <div class="row title-header">
+          <span>Send message to group</span>
+        </div>
         <div class="row">
-          <form role="form" method="post" action="/messages/new">
-            <% for(var i=0; i<parents.length; i++) { %>
-            <div class="form-group">
-              <label><input name="selected" value="<%=parents[i].id%>" type="checkbox"> <%=parents[i].get("first_name")%> <%=parents[i].get("last_name")%></label>
-            </div>
-            <% } %>
-            
+          <div class="col-xs-12">
+            <div class="group-members">
+              <form role="form" method="post" action="/messages/new">
+              <% for(var i=0; i<parents.length; i++) { %>
+                <div class="form-group">
+                  <label><input name="selected" value="<%=parents[i].id%>" type="checkbox"> <%=parents[i].get("first_name")%> <%=parents[i].get("last_name")%></label>
+                </div>
+              <% } %>
             <% for(var i=0; i<passengers.length; i++) { %>
-            <div class="form-group">
+              <div class="form-group">
               <label><input name="selected" value="<%=passengers[i].id%>" type="checkbox"> <%=passengers[i].get("first_name")%> <%=passengers[i].get("last_name")%></label>
-            </div>
+              </div>
             <% } %>
-
+            </div>
             <div class="form-group">
               <label>Subject</label>
               <input type="text" class="form-control" name="subject"></input>
@@ -35,10 +38,12 @@
               <textarea class="form-control" name="message"></textarea>
             </div>
 
-            <button class="btn btn-primary" type="submit">Submit</button>
-            <button class="btn btn-default" type="cancel">Cancel</button>
+            <div class="btn-wrapper">
+              <button class="btn btn-teal" type="submit">Submit</button>
+              <button class="btn btn-default" type="cancel">Cancel</button>
+            </div>
           </form>
-
+          </div>
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->

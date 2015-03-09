@@ -11,9 +11,11 @@
     <% include ../partials/brand_header %>
     <div class="container-fluid main-container">
         <div class="title-header row">
-            <div class = "btn-wrapper">
+            <div class = "btn-row-wrapper">
                 <a href="/upcoming-rides/<%=group.id%>" class="btn btn-teal">
-                    see upcoming rides
+                    upcoming rides
+                </a>
+                <a href="/messages/group/<%= group.id %>" class="btn btn-teal">     message group
                 </a>
             </div>
         </div>
@@ -47,9 +49,6 @@
                                 <% }%>
                             </ul>
                  </div>
-                <div class="row">
-                  <a href="/message/group/<%= group.id %>" class="btn btn-teal">Message</a>
-                </div>
                 <div class="padding"></div>
                 <div class="padding"></div>
                 <!-- /.row -->
