@@ -1,4 +1,8 @@
-div.padding { padding-top: 40px; }
+div.padding { 
+  padding-top: 40px; 
+  background: #eee;
+}
+
 
 .btn-teal {
   color: #fff;
