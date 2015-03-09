@@ -15,7 +15,11 @@
               <% for(var i=0; i<messages.length; i++) { %>
                   <a href="/messages/<%=messages[i].thread_id%>" class="list-group-item">
                   <div>
+                    <% if(messages[i].isSystem) { %> 
+                    <span class="message-from-label msg-curr-user"><%=messages[i].author%></span>
+                    <% } else { %>
                     <span class="message-from-label"><%=messages[i].author%></span>
+                    <% } %>
                     <span class="message-count-label"><strong><%=messages[i].num_messages%></strong></span>
                     <span class="message-date-label pull-right"><small><%=messages[i].date%></small></span>
                   </div>

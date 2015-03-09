@@ -48,7 +48,7 @@ app.get('/', function(req, res) {
 	var user = Parse.User.current();
 
   if(user) {
-    console.log(user);
+    //console.log(user);
     var ride = Parse.Object.extend("ride");
     var query = new Parse.Query(ride);
     query.equalTo("driverId", Parse.User.current());
@@ -172,7 +172,7 @@ app.get('/ride-details/:id', function(req, res) {
             swapQuery.equalTo("rideId", ride).find().then(function(swap) {
             var swap_exists = swap.length > 0 ? true : false;
 
-            console.log(swap_exists);
+            //console.log(swap_exists);
             res.render('pages/ride-details', {
               title: "Ride Details", 
               ride_id: ride.id,
@@ -371,6 +371,9 @@ app.get('/swap/:id', function(req, res) {
     swapQuery.include("rideId");
     swapQuery.get(swap_id).then(function(swap) {
         var promises = [];
+
+        var your_swap = swap.get("old_driverId").id == Parse.User.current().id ? true : false;
+        
         var old_driver = {
           name: swap.get("old_driverId").get("first_name") + " " + swap.get("old_driverId").get("last_name"),
           user_id: swap.get("old_driverId").id
@@ -413,7 +416,8 @@ app.get('/swap/:id', function(req, res) {
             old_driver: old_driver,
             new_driver: new_driver,
             note: note,
-            passengers: passengers_arr
+            passengers: passengers_arr,
+            your_swap: your_swap
           };
         });
     }).then(function() {
@@ -447,20 +451,28 @@ app.get('/swap/confirm/:id', function(req, res) {
       return swap.save();
     }).then(function() {
       var systemUserQuery = new Parse.Query("User");
-      return systemUserQuery.get(SYSTEM_USER_ID).find();
+      return systemUserQuery.get(SYSTEM_USER_ID);
     }).then(function(systemUser) {
       var thread_message = new Parse.Object("thread_message");
       thread_message.set("author", systemUser);
-      var message = Parse.User.current().get("first_name") + " " + Parse.User.current().get("last_name") + " picked up your shift.";
+      var message = Parse.User.current().get("first_name") + " " + Parse.User.current().get("last_name") + " was able to pick up your shift!";
       thread_message.set("message", message);
-      
-      var thread = new Parse.Object("thread");
-      thread.set("subject", "Your shift was picked up.");
-      thread.set("num_messages", 1);
-      thread.set("last_message", thread_message);
-      thread_message.set("thread", thread);
-      return thread.save();
-    }).then(function() {
+      return thread_message.save().then(function() {
+        var thread = new Parse.Object("thread");
+        thread.set("subject", "Your shift was picked up!");
+        thread.set("num_messages", 1);
+        thread.set("last_message", thread_message);
+        thread.set("isSystem", true);
+        thread_message.set("thread", thread);
+        return thread.save().then(function() {
+          var thread_member = new Parse.Object("thread_member"); 
+          thread_member.set("userId", Parse.User.current());
+          thread_member.set("thread", thread);
+          return thread_member.save();
+        });
+      });
+    }).then(function(result) {
+      console.log(result);
       res.redirect('/swap/');
     }, function(error) {
         console.log("Error: " + error.code + " " + error.message);
@@ -583,7 +595,8 @@ app.get('/messages', function(req, res) {
               num_messages: thread.get("num_messages"),
               date: date,
               subject: thread.get("subject"),
-              message_body: last_message.get("message")
+              message_body: last_message.get("message"),
+              isSystem: thread.get("isSystem")
             };
             $$_data_$$.push(item);
 
@@ -630,6 +643,12 @@ app.get('/messages/:id', function(req, res) {
             } else {
               thread_members += ", " + name;
             }  
+          }
+
+          if(thread_members == "") {
+            thread_members = "You";
+          } else {
+            thread_members += ", You";
           }
         }
 
@@ -698,6 +717,7 @@ app.post('/messages/new', function(req, res) {
       thread.set("subject", subject);
       thread.set("num_messages", 1);
       thread.set("last_message", thread_message);
+      thread.set("isSystem", false);   
       thread_message.set("thread", thread);
       return thread.save().then(function() {
         var User = Parse.Object.extend("User");
