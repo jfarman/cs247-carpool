@@ -645,11 +645,11 @@ app.get('/messages/:id', function(req, res) {
             }  
           }
 
-          if(thread_members == "") {
-            thread_members = "You";
-          } else {
-            thread_members += ", You";
-          }
+        }
+        if(thread_members == "") {
+          thread_members = "You";
+        } else {
+          thread_members += ", You";
         }
 
         thread_subject = thread.get("subject");
