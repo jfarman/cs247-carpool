@@ -144,8 +144,14 @@ app.get('/ride-details/:id', function(req, res) {
       success: function(ride) {
         var group = ride.get("groupId");
         var driver = ride.get("driverId");
+        var isDriver = false;
+        if (Parse.User.current() == driver){
+          isDriver = true;
+        }
+        var startLoc = ride.get("fromLocation");
+        var endLoc = ride.get("toLocation");
         var driver_name = driver.get("first_name") + " " + driver.get("last_name");
-        var date = moment(ride.get("datetime")).format('h:mm a MM/DD/YYYY');
+        var date = moment(ride.get("datetime")).format('ddd h:mm a MM/DD/YY');
         //console.log(" >>>> " + date);
         var passenger_arr = new Array();
         var ride_passengers = Parse.Object.extend("ride_passenger");
@@ -170,7 +176,10 @@ app.get('/ride-details/:id', function(req, res) {
               ride_id: ride.id,
               passengers: passenger_arr, 
               group: group,
+              isDriver: isDriver,
               date: date,
+              start_location: startLoc,
+              end_location: endLoc,
               driver_name: driver_name,
               swap_exists: swap_exists
             });
