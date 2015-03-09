@@ -466,7 +466,7 @@ app.get('/swap/confirm/:id', function(req, res) {
         thread_message.set("thread", thread);
         return thread.save().then(function() {
           var thread_member = new Parse.Object("thread_member"); 
-          thread_member.set("userId", Parse.User.current());
+          thread_member.set("userId", old_driver);
           thread_member.set("thread", thread);
           return thread_member.save();
         });
