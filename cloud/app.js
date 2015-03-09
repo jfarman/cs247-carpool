@@ -738,7 +738,7 @@ app.get('/messages/group/:id', function(req, res) {
     var group_id = req.params.id
     var group_name;
   
-    var group_query = Parse.Query("group");
+    var group_query = new Parse.Query("group");
     group_query.get(group_id).then(function(group) {
       group_name = group.get("name"); 
 
