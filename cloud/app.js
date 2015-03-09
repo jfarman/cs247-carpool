@@ -210,7 +210,7 @@ app.get('/ride-details/:id', function(req, res) {
       var group = ride.get("groupId");
       var driver = ride.get("driverId");
       var driver_name = driver.get("first_name") + " " + driver.get("last_name");
-      var date = moment(ride.get("datetime")).format('h:mm a MM/DD/YYYY');
+      var date = moment(ride.get("datetime")).format(date_format);
       //console.log(" >>>> " + date);
       var passenger_arr = new Array();
       var ride_passengers = Parse.Object.extend("ride_passenger");
