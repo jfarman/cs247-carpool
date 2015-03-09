@@ -135,7 +135,6 @@ app.get('/group-details/:id', function(req, res) {
 
 app.get('/ride-details/:id', function(req, res) {
   /* sample id = XQ3p6Lrhhg */
-  
   if(Parse.User.current()) {
     var CurrentRide = Parse.Object.extend("ride");
     var rideQuery = new Parse.Query(CurrentRide);
