@@ -29,11 +29,31 @@
                 <%=date%>
             </span>
         </div>
+
+        <div class="row row-entry">
+            <span><strong>Start Location</strong></span>  
+            <span class="pull-right">
+                <%=start_location%>
+            </span>
+        </div>
+
+        <div class="row row-entry">
+            <span><strong>End Location</strong></span>  
+            <span class="pull-right">
+                <%=end_location%>
+            </span>
+        </div>
         
         <div class="row row-entry">
             <span><strong>Driver</strong></span>  
             <span class="pull-right">
                 <%=driver_name%>
+            </span>
+            </br>
+            <span class="pull-right">
+                <% if(swap_exists) { %>
+                    <span class="label label-pending">Swap Requested</span>
+                <%} %>
             </span>
         </div>
 
@@ -48,9 +68,14 @@
         </div>
     </div>
 
-<!--% if (!swap_exists) { %--> 
-    <!--<a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary"--><!--Request Swap</a>--> 
-<!--% } %>
+    <% if (!swap_exists) { %>
+        <div class = "btn-wrapper">
+            <a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary">
+                Request Swap
+            </a>
+        </div>
+    <% } %>
+
 
 <div class = "navbar navbar-default navbar-fixed-bottom">
 	<div class  ="container">
@@ -62,3 +87,9 @@
 </body>
 
 </html>
+
+
+<!--% if (!swap_exists) { %--> 
+    <!--<a href="/ride/swap/<%=ride_id%>" class="btn btn-xs btn-primary"--><!--Request Swap</a>--> 
+<!--% } %>
+
