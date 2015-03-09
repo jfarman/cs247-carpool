@@ -10,6 +10,7 @@ var app = express();
 var moment = require('moment');
 //var cookieParser = require('cookie-parser')
 var date_format = "ddd h:mm a MM/DD/YY";
+var SYSTEM_USER_ID = "r8jWeIE83n";
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
@@ -165,6 +166,7 @@ app.get('/ride-details/:id', function(req, res) {
             swapQuery.equalTo("rideId", ride).find().then(function(swap) {
             var swap_exists = swap.length > 0 ? true : false;
 
+            console.log(swap_exists);
             res.render('pages/ride-details', {
               title: "Ride Details", 
               ride_id: ride.id,
@@ -423,12 +425,32 @@ app.get('/swap/:id', function(req, res) {
 
 app.get('/swap/confirm/:id', function(req, res) {
   if(Parse.User.current()) {
+    var old_driver;
+
     var swap_id = req.params.id;
     var swapQuery = new Parse.Query("swap_requests");
+    swapQuery.include("old_driverId");
     swapQuery.get(swap_id).then(function(swap) {
       swap.set("isActive", false);
       swap.set("new_driverId", Parse.User.current());
+      
+      old_driver = swap.get("old_driverId");
       return swap.save();
+    }).then(function() {
+      var systemUserQuery = new Parse.Query("User");
+      return systemUserQuery.get(SYSTEM_USER_ID).find();
+    }).then(function(systemUser) {
+      var thread_message = new Parse.Object("thread_message");
+      thread_message.set("author", systemUser);
+      var message = Parse.User.current().get("first_name") + " " + Parse.User.current().get("last_name") + " picked up your shift.";
+      thread_message.set("message", message);
+      
+      var thread = new Parse.Object("thread");
+      thread.set("subject", "Your shift was picked up.");
+      thread.set("num_messages", 1);
+      thread.set("last_message", thread_message);
+      thread_message.set("thread", thread);
+      return thread.save();
     }).then(function() {
       res.redirect('/swap/');
     }, function(error) {
