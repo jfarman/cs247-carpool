@@ -48,7 +48,6 @@ app.get('/', function(req, res) {
 	var user = Parse.User.current();
 
   if(user) {
-    //console.log(user);
     var ride = Parse.Object.extend("ride");
     var query = new Parse.Query(ride);
     query.equalTo("driverId", Parse.User.current());
@@ -164,7 +163,6 @@ app.get('/ride-details/:id', function(req, res) {
             for (var i = 0; i < results.length; i++) { 
               var user = results[i].get("passengerId");
               var name = user.get("first_name") + " " + user.get("last_name");
-              //console.log(name);
               passenger_arr.push(name);
             }
 
@@ -172,7 +170,6 @@ app.get('/ride-details/:id', function(req, res) {
             swapQuery.equalTo("rideId", ride).find().then(function(swap) {
             var swap_exists = swap.length > 0 ? true : false;
 
-            //console.log(swap_exists);
             res.render('pages/ride-details', {
               title: "Ride Details", 
               ride_id: ride.id,
@@ -288,7 +285,6 @@ app.get('/swap/', function(req, res) {
       groupQuery.include("groupId");
       groupQuery.equalTo("userId", Parse.User.current());
       groupQuery.find().then(function(group_members) {
-        //console.log(group_members);
         var groups = [];
         for(var i=0; i<group_members.length; i++) {
           (function(index) {
@@ -635,21 +631,13 @@ app.get('/messages/:id', function(req, res) {
       thread_members_query.include("userId");
       return thread_members_query.find().then(function(thread_members_result) {
         for(var i=0; i<thread_members_result.length; i++) {
-          if(thread_members_result[i].get("userId").id != Parse.User.current().id) {
-            var member = thread_members_result[i].get("userId");
-            var name = member.get("first_name");
-            if(i == 0) {
-              thread_members = name;
-            } else {
-              thread_members += ", " + name;
-            }  
-          }
-
-        }
-        if(thread_members == "") {
-          thread_members = "You";
-        } else {
-          thread_members += ", You";
+          var member = thread_members_result[i].get("userId");
+          var name = member.get("first_name");
+          if(i == 0) {
+            thread_members = name;
+          } else {
+            thread_members += ", " + name;
+          }  
         }
 
         thread_subject = thread.get("subject");
@@ -701,13 +689,11 @@ app.get('/messages/:id', function(req, res) {
 app.post('/messages/new', function(req, res) {
   if(Parse.User.current()) {
     var curr_user = Parse.User.current();
-    var selected = req.body.selected;
-    if(Object.prototype.toString.call(selected) !== '[object Array]' ) {
-          selected = [selected];
-    }
     var subject = req.body.subject;
     var message_body = req.body.message;
+    var group_id = req.body.group_id;
 
+    var thread_closure;
 
     var thread_message = new Parse.Object("thread_message");
     thread_message.set("author", curr_user);
@@ -719,29 +705,33 @@ app.post('/messages/new', function(req, res) {
       thread.set("last_message", thread_message);
       thread.set("isSystem", false);   
       thread_message.set("thread", thread);
-      return thread.save().then(function() {
-        var User = Parse.Object.extend("User");
-        var to_user_query = new Parse.Query(User);
-        console.log(selected);
-        return to_user_query.containedIn("objectId", selected).find().then(function(to_users) {
-          to_users.push(curr_user);
-          var promises = [];
-          //console.log(curr_user);
-          for(var i=0; i<to_users.length; i++) {
-            var thread_member = new Parse.Object("thread_member");
-            thread_member.set("userId", to_users[i]);
-            thread_member.set("thread", thread);
-            promises.push(thread_member.save());
+      return thread.save();
+    }).then(function(thread) {
+      thread_closure = thread;
+      var group_query = new Parse.Query("group");
+      return group_query.get(group_id);
+    }).then(function(group) {
+      var group_members_query = new Parse.Query("group_member");
+      group_members_query.include("userId");
+      group_members_query.equalTo("groupId", group);
+      return group_members_query.find();
+    }).then(function(members) {
+      var promises = [];
+      for(var i=0; i<members.length; i++) {
+        var thread_member = new Parse.Object("thread_member");
+        thread_member.set("userId", members[i].get("userId"));
+        thread_member.set("thread", thread_closure);
+        promises.push(thread_member.save());
 
-            var thread_opened = new Parse.Object("thread_message_opened");
-            thread_opened.set("userId", to_users[i]);
-            thread_opened.set("thread_message", thread_message)
-            thread_opened.set("opened", false);
-            promises.push(thread_opened.save()); 
-          }
-          return Parse.Promise.when(promises);
-        });
-      });
+        /*
+        var thread_opened = new Parse.Object("thread_message_opened");
+        thread_opened.set("userId", members[i]);
+        thread_opened.set("thread_message", thread_message)
+        thread_opened.set("opened", false);
+        promises.push(thread_opened.save()); 
+        */
+      }
+      return Parse.Promise.when(promises);
     }).then(function() {
       res.redirect('/messages/');
     }, function(error) {
@@ -798,31 +788,16 @@ app.get('/messages/group/:id', function(req, res) {
       query.include("userId");
       query.equalTo("groupId", group);
       query.find().then(function(members) {
-        var parents = [];
-        var passengers = [];
         for(var i = 0; i<members.length; i++) {
           var user = members[i].get("userId");
           if(user.id == Parse.User.current().id) {
             continue;
           }
-
-          if(user.get("isParent")) {
-            parents.push(user);
-          } else {
-            passengers.push(user);
-          }
         }
-        var arrayUnique = function(a) {
-            return a.reduce(function(p, c) {
-                if (p.indexOf(c) < 0) p.push(c);
-                return p;
-            }, []);
-        };
-
         res.render('pages/group/message',{
           title: "Group Message",
-          parents: parents,
-          passengers: passengers,
+          members: members,
+          group_id: group_id,
           group_name: group_name
         });
       });
