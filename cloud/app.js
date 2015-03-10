@@ -836,7 +836,33 @@ app.get('/messages/group/:id', function(req, res) {
 
 app.post('/message/group/new', function(req, res) {
  console.log(req.body.selected) 
+});
 
+app.get('/clear', function(req, res) {
+  var promises = [];
+  var swap_requests_query = new Parse.Query("swap_requests");
+  swap_requests_query.find().then(function(swap_requests) {
+    return Parse.Object.destroyAll(swap_requests);
+  });
+
+  var thread_query = new Parse.Query("thread");
+  thread_query.find().then(function(thread) {
+    return Parse.Object.destroyAll(thread);
+  });
+
+  var thread_members_query = new Parse.Query("thread_member");
+  promises.push(thread_members_query.find().then(function(thread_members) {
+    return Parse.Object.destroyAll(thread_members);
+  }));
+
+  var thread_messages_query = new Parse.Query("thread_message");
+  promises.push(thread_messages_query.find().then(function(thread_messages) {
+    return Parse.Object.destroyAll(thread_messages);
+  }));
+
+  Parse.Promise.when(promises).then(function() {
+    res.redirect('/login');
+  });
 
 });
 // // Example reading from the request query string of an HTTP get request.
