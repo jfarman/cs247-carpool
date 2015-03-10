@@ -439,12 +439,17 @@ app.get('/swap/confirm/:id', function(req, res) {
     var swap_id = req.params.id;
     var swapQuery = new Parse.Query("swap_requests");
     swapQuery.include("old_driverId");
+    swapQuery.include("rideId");
     swapQuery.get(swap_id).then(function(swap) {
       swap.set("isActive", false);
       swap.set("new_driverId", Parse.User.current());
       
       old_driver = swap.get("old_driverId");
       return swap.save();
+    }).then(function(swap) {
+      var ride = swap.get("rideId");
+      ride.set("driverId", Parse.User.current());
+      return ride.save();
     }).then(function() {
       var systemUserQuery = new Parse.Query("User");
       return systemUserQuery.get(SYSTEM_USER_ID);
