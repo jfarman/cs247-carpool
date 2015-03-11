@@ -51,6 +51,7 @@ app.get('/', function(req, res) {
     var ride = Parse.Object.extend("ride");
     var query = new Parse.Query(ride);
     query.equalTo("driverId", Parse.User.current());
+    query.ascending("datetime");
     query.include("groupId");
     query.find({
       success: function(results){
