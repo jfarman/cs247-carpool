@@ -18,10 +18,13 @@
             <% for(var i=0; i<rides.length; i++) { %>
                 <a href="/ride-details/<%= rides[i].id%>" 
                 class="list-group-item">
-                    <%var date = rides[i].get("datetime")%>
+                    <%var date = rides[i].ride.get("datetime")%>
                     <%var new_date = 
                         moment(date).utcOffset("-08:00").format('ddd h:mm a MM/DD/YYYY')%>
                     <%=new_date%>
+                    <span class="pull-right driver-text">
+                        <%= rides[i].driver.get("first_name")%>
+                    </span>
                 </a>
             <% } %>
           </div>

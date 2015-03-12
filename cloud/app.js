@@ -556,9 +556,10 @@ app.get('/upcoming-rides/:id', function(req, res) {
       ridesQuery.find().then(function(rides) {
         var myRides = [];
         for(var i=0; i<rides.length; i++) {
-            var ride = rides[i];
-            myRides.push(ride)
-            var driver = ride.get("driverId");
+            var ride_object = new Object();
+            ride_object.ride = rides[i];
+            ride_object.driver = rides[i].get("driverId");
+            myRides.push(ride_object);
         }
         res.render('pages/upcoming-rides',{
           title: "Rides for this group",

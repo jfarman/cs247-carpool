@@ -18,6 +18,10 @@ div.padding {
   color: #696969;
 }
 
+.driver-text{
+  color: #1695A3;
+}
+
 html {
   background: #fafafa;
 }
@@ -71,7 +75,6 @@ span.edit{
 div.btn-wrapper {
   text-align: center;
   padding: 10px 10px;
-  background: #eee;
 }
 
 div.btn-row-wrapper {
