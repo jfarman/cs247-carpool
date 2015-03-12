@@ -1,10 +1,11 @@
 div.padding { 
   padding-top: 40px; 
-  background: #eee;
+  background: #fafafa;
 }
 
 .location-link{
-  
+  text-decoration: underline;
+  color: #225378;
 }
 
 .list-group-item.date-heading {
@@ -173,13 +174,7 @@ i.footer-nav-active{
   background-color: #EB7F00;
 }
 
-html {
-  background: #eee;
-}
 
-div.background {
-  background: #eee;
-}
 
 div.message-box {
   border: 1px solid black; 
