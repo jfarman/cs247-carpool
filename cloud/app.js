@@ -488,7 +488,6 @@ app.get('/swap/confirm/:id', function(req, res) {
         });
       });
     }).then(function(result) {
-      console.log(result);
       res.redirect('/swap/');
     }, function(error) {
         console.log("Error: " + error.code + " " + error.message);
@@ -612,6 +611,7 @@ app.get('/messages', function(req, res) {
               thread_id: thread.id,
               author: last_message.get("author").get("first_name") + " " + last_message.get("author").get("last_name"),
               num_messages: thread.get("num_messages"),
+              isCurrUser: (last_message.get("author").id == curr_user.id) ? true : false,
               date: date,
               subject: thread.get("subject"),
               message_body: message_text,
@@ -675,6 +675,14 @@ app.get('/messages/:id', function(req, res) {
           var date = thread_messages[i].createdAt;
           var message = thread_messages[i].get("message");
           var author = thread_messages[i].get("author");
+          if (author.id == curr_user.id) {
+            var author_style = "msg-curr-user";
+          } else if (author.id == SYSTEM_USER_ID) {
+            var author_style = "msg-system";
+              console.log("system message !!");
+          } else {
+            var author_style = "msg-default";
+          }
 
           if(moment().diff(moment(date), 'days') < 1) {
             date = moment(date).utcOffset("-07:00").format("hh:mm a");
@@ -685,7 +693,7 @@ app.get('/messages/:id', function(req, res) {
           var item = {
             author: author.get("first_name") + " " + author.get("last_name"),
             curr_user: author.id == curr_user.id ? true : false,
-            author_style: author.id == curr_user.id ? "msg-curr-user" : "msg-default",
+            author_style: author_style,
             body: message,
             date: date
           };

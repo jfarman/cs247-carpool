@@ -9,14 +9,15 @@
     <% include ../../partials/brand_header %>
     <!-- Page Content -->
     <div class="container-fluid main-container">
-        <div class="row inbox-header"><span><i class="icon-inbox"></i> <strong>Inbox</strong></span></div>
+        <div class="row title-header"><span>Inbox</span>
+        </div>
         <div class="row">
             <div class="list-group">
               <% for(var i=0; i<messages.length; i++) { %>
                   <a href="/messages/<%=messages[i].thread_id%>" class="list-group-item">
                   <div>
                     <% if(messages[i].isSystem) { %> 
-                    <span class="message-from-label msg-curr-user"><%=messages[i].author%></span>
+                    <span class="message-from-label msg-system"><%=messages[i].author%></span>
                     <% } else { %>
                     <span class="message-from-label"><%=messages[i].author%></span>
                     <% } %>

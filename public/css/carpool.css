@@ -94,6 +94,7 @@ span.edit{
 .edit-icon {
   color: #1695a3;
   vertical-align: middle;
+  margin-left: 5px;
 }
 
 div.btn-wrapper {
@@ -151,12 +152,16 @@ div.footer-nav-icon{
   margin-right: auto;
 }
 
-span.msg-curr-user{
+span.msg-system{
   color: #EB7F00;
 }
 
-span.msg-default{
+span.msg-curr-user{
   color: #1695A3;
+}
+
+span.msg-default{
+  color: #225378;
 }
 
 i.footer-nav{
@@ -178,6 +183,12 @@ div.footer-nav-icon-active{
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+}
+
+i.carat {
+  vertical-align: middle;
+  padding-left: 7px;
+  color: #a8a8a8;
 }
 
 i.footer-nav-active{

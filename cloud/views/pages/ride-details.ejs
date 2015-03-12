@@ -13,11 +13,6 @@
     <div class="container-fluid main-container">
         <div class="row title-header">
           <span>Ride Details</span>
-            <span class="pull-right edit">
-            <i class = "fa fa-edit edit-icon fa-1x"></i>
-            edit
-          </span>
-
         </div>
 
 
@@ -71,7 +66,9 @@
         </div>
 
         <div class="row row-entry">
-          <span><strong>Passengers</strong></span>
+            <span><strong>Passengers</strong>
+                <i class = "fa fa-edit edit-icon fa-1x">edit</i>
+            </span>
             <% for (var p in passengers) {%>
                 <span class="pull-right">
                     <%=passengers[p]%>
