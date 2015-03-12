@@ -153,7 +153,6 @@ app.get('/ride-details/:id', function(req, res) {
         var endLoc = ride.get("toLocation");
         var driver_name = driver.get("first_name") + " " + driver.get("last_name");
         var date = moment(ride.get("datetime")).utcOffset("-08:00").format('ddd h:mm a MM/DD/YY');
-        //console.log(" >>>> " + date);
         var passenger_arr = new Array();
         var ride_passengers = Parse.Object.extend("ride_passenger");
         var passQuery = new Parse.Query(ride_passengers);
@@ -171,7 +170,7 @@ app.get('/ride-details/:id', function(req, res) {
             swapQuery.equalTo("rideId", ride).find().then(function(swap) {
             var swap_exists = false;
             for(var i=0; i < swap.length; i++) {
-              if(swap[i].get("isActive")) { console.log(swap[i]); swap_exists = true; }
+              if(swap[i].get("isActive")) { swap_exists = true; }
             }
             var swap_is_active = null;
             if(swap_exists) {
@@ -349,7 +348,6 @@ app.get('/swap/', function(req, res) {
         for(var i=0; i<$$_data_$$.length; i++) {
           $$_data_$$[i].date = moment($$_data_$$[i].date).utcOffset("-08:00").format(date_format);
         }
-        //console.log($$_data_$$); 
         res.render('pages/swap-board',
         {
           title: "Swapboard",    
@@ -488,7 +486,6 @@ app.get('/swap/confirm/:id', function(req, res) {
         });
       });
     }).then(function(result) {
-      console.log(result);
       res.redirect('/swap/');
     }, function(error) {
         console.log("Error: " + error.code + " " + error.message);
@@ -530,7 +527,6 @@ app.get('/groups', function(req, res) {
       for(var i = 0; i<groups.length; i++) {
         var group = groups[i].get("groupId");
         myGroups.push(group);
-        console.log(group.get("name"));
       }
       res.render('pages/groups-index',{
         title: "My Groups",
@@ -552,6 +548,7 @@ app.get('/upcoming-rides/:id', function(req, res) {
       var ridesQuery = new Parse.Query("ride")
       ridesQuery.include("groupId");
       ridesQuery.include("driverId");
+      ridesQuery.ascending("datetime");
       ridesQuery.equalTo("groupId", group);
       ridesQuery.find().then(function(rides) {
         var myRides = [];
@@ -624,7 +621,6 @@ app.get('/messages', function(req, res) {
       }
       return Parse.Promise.when(promises);
     }).then(function() {
-      //console.log($$_data_$$);
       res.render('pages/messages/main', {
         title: "Messages",
         messages: $$_data_$$
