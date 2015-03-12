@@ -169,7 +169,10 @@ app.get('/ride-details/:id', function(req, res) {
 
             var swapQuery = new Parse.Query("swap_requests");
             swapQuery.equalTo("rideId", ride).find().then(function(swap) {
-            var swap_exists = swap.length > 0 ? true : false;
+            var swap_exists = false;
+            for(var i=0; i < swap.length; i++) {
+              if(swap[i].get("isActive")) { console.log(swap[i]); swap_exists = true; }
+            }
             var swap_is_active = null;
             if(swap_exists) {
               swap_is_active = swap[0].get("isActive");
@@ -441,6 +444,8 @@ app.get('/swap/:id', function(req, res) {
 app.get('/swap/confirm/:id', function(req, res) {
   if(Parse.User.current()) {
     var old_driver;
+    var ride_closure;
+    var group_closure;
 
     var swap_id = req.params.id;
     var swapQuery = new Parse.Query("swap_requests");
@@ -456,13 +461,17 @@ app.get('/swap/confirm/:id', function(req, res) {
       var ride = swap.get("rideId");
       ride.set("driverId", Parse.User.current());
       return ride.save();
-    }).then(function() {
+    }).then(function(ride) {
+      ride_closure = ride;
+      return ride.get("groupId").fetch()
+    }). then(function(group) {
+      group_closure = group;
       var systemUserQuery = new Parse.Query("User");
       return systemUserQuery.get(SYSTEM_USER_ID);
     }).then(function(systemUser) {
       var thread_message = new Parse.Object("thread_message");
       thread_message.set("author", systemUser);
-      var message = Parse.User.current().get("first_name") + " " + Parse.User.current().get("last_name") + " was able to pick up your shift!";
+      var message = Parse.User.current().get("first_name") + " " + Parse.User.current().get("last_name") + " was able to pick up your shift for: " + group_closure.get("name") + " on " + moment(ride_closure.get("datetime")).utcOffset("-08:00").format('llll');
       thread_message.set("message", message);
       return thread_message.save().then(function() {
         var thread = new Parse.Object("thread");
