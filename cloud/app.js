@@ -99,6 +99,7 @@ app.get('/group-details/:id', function(req, res) {
         memberQuery.include("userId");
         memberQuery.find({
           success: function(results) {
+            console.log(results.length);
             for (var i = 0; i < results.length; i++) { 
               var user = results[i].get("userId");
               var name = user.get("first_name") + " " + user.get("last_name");
@@ -598,13 +599,6 @@ app.get('/messages', function(req, res) {
             var n = 80;
             var message_body = last_message.get("message");
             var message_text = message_body.substr(0,n-1)+(message_body.length>n?'&hellip;':'');
-
-            if(moment().diff(moment(date), 'days') < 1) {
-              date = moment(date).utcOffset("-08:00").format("hh:mm a");
-            } else {
-              date = moment(date).utcOffset("-08:00").format("MMM DD");
-            }
-
             var item = {
               thread_id: thread.id,
               author: last_message.get("author").get("first_name") + " " + last_message.get("author").get("last_name"),
@@ -622,6 +616,20 @@ app.get('/messages', function(req, res) {
       }
       return Parse.Promise.when(promises);
     }).then(function() {
+      $$_data_$$.sort(function(a, b) {
+        if(a.date < b.date) { return 1; }
+        else if(a.date > b.date) { return -1; }
+        else { return 0; }
+      });
+
+      for(var i=0; i<$$_data_$$.length; i++) {
+          if(moment().diff(moment($$_data_$$[i].date), 'days') < 1) {
+            $$_data_$$[i].date = moment($$_data_$$[i].date).utcOffset("-08:00").format("hh:mm a");
+          } else {
+            $$_data_$$[i].date = moment($$_data_$$[i].date).utcOffset("-08:00").format("MMM DD");
+          }
+      }
+
       res.render('pages/messages/main', {
         title: "Messages",
         messages: $$_data_$$
