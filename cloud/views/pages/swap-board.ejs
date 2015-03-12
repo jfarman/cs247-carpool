@@ -18,11 +18,11 @@
             <% for(var i=0; i<requests.length; i++) { %>
               <a href="/swap/<%=requests[i].swap_id%>" class="list-group-item">
                 <div class="row">
-                  <span class="request-group-name-label col-xs-7"><%=requests[i].group%></span>
-                  <span class="request-date-label col-xs-5 text-right"><%=requests[i].date%></span>
+                  <span class="request-group-name-label col-xs-6"><%=requests[i].group%></span>
+                  <span class="request-date-label col-xs-6 text-right"><%=requests[i].date%></span>
                 </div>
                 <div class="row">
-                  <span class="request-message-label col-xs-7"><strong><%=requests[i].curr_driver%> - </strong><%=requests[i].note%></span>
+                  <span class="request-message-label col-xs-6"><strong><%=requests[i].curr_driver%> - </strong><%=requests[i].note%></span>
                   <% if(requests[i].is_active) { %>
                   <span class="col-xs-5 text-right"><span class="text-pending">pending</span></span>
                   <% } else { %>
