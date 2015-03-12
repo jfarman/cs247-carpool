@@ -22,16 +22,15 @@
                         <div class="list-group-item date-heading">
                             <%= rides[ride][0].get("datetime").toDateString()%>
                         </div>
-                            <% for (var shift in rides[ride]) { %>
-                               <a href="ride-details/<%= rides[ride][shift].id %>" class="list-group-item ">
+                        <% for (var shift in rides[ride]) { %>
+                            <a href="ride-details/<%= rides[ride][shift].id %>" class="list-group-item rides">
                                 <%= rides[ride][shift].get("groupId").get("name") %>
-
                                 <span class="pull-right">
                                     <%= rides[ride][shift].date %>
-                                </span>
-                                
-                                </a>
-                                <% } %>
+                                    <i class = "fa fa-chevron-right"></i>
+                                </span>   
+                            </a>
+                        <% } %>
                 <% } %>
                 </ul>
             </div>
