@@ -7,7 +7,7 @@ var parseExpressCookieSession = require('parse-express-cookie-session');
 // These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
 var app = express();
-var moment = require('moment');
+var moment = require('cloud/moment');
 //var cookieParser = require('cookie-parser')
 var date_format = "ddd h:mm a MM/DD/YY";
 var SYSTEM_USER_ID = "r8jWeIE83n";
@@ -61,7 +61,7 @@ app.get('/', function(req, res) {
                       rides[results[result].get("datetime").toDateString()] = [];
                   }
                   rides[results[result].get("datetime").toDateString()].push(results[result]);
-                  var date = moment(results[result].get("datetime")).format('h:mm a');
+                  var date = moment(results[result].get("datetime")).utcOffset("-08:00").format('h:mm a');
                   rides[results[result].get("datetime").toDateString()][rides[results[result].get("datetime").toDateString()].length-1].date = date
               }
           res.render('pages/index', {
@@ -152,7 +152,7 @@ app.get('/ride-details/:id', function(req, res) {
         var startLoc = ride.get("fromLocation");
         var endLoc = ride.get("toLocation");
         var driver_name = driver.get("first_name") + " " + driver.get("last_name");
-        var date = moment(ride.get("datetime")).format('ddd h:mm a MM/DD/YY');
+        var date = moment(ride.get("datetime")).utcOffset("-08:00").format('ddd h:mm a MM/DD/YY');
         //console.log(" >>>> " + date);
         var passenger_arr = new Array();
         var ride_passengers = Parse.Object.extend("ride_passenger");
@@ -212,7 +212,7 @@ app.get('/ride/swap/:id', function(req, res) {
       success: function(ride) {
         var group_name = ride.get("groupId").get("name");
         var curr_driver_name = ride.get("driverId").get("first_name") + " " + ride.get("driverId").get("last_name");
-        var date_string = moment(ride.get("datetime")).format(date_format);
+        var date_string = moment(ride.get("datetime")).utcOffset("-08:00").format(date_format);
         var passengers_arr = [];
         var RidePassenger = Parse.Object.extend("ride_passenger");
         var passQuery = new Parse.Query(RidePassenger);
@@ -339,7 +339,7 @@ app.get('/swap/', function(req, res) {
           }
         });
         for(var i=0; i<$$_data_$$.length; i++) {
-          $$_data_$$[i].date = moment($$_data_$$[i].date).format(date_format);
+          $$_data_$$[i].date = moment($$_data_$$[i].date).utcOffset("-08:00").format(date_format);
         }
         //console.log($$_data_$$); 
         res.render('pages/swap-board',
@@ -382,7 +382,7 @@ app.get('/swap/:id', function(req, res) {
         };
 
         var is_active = swap.get("isActive");
-        var date = moment(swap.get("rideId").get("datetime")).format(date_format);
+        var date = moment(swap.get("rideId").get("datetime")).utcOffset("-08:00").format(date_format);
         var note = swap.get("note_text");
 
         var group_name;
@@ -544,7 +544,6 @@ app.get('/upcoming-rides/:id', function(req, res) {
         for(var i=0; i<rides.length; i++) {
             var ride = rides[i];
             myRides.push(ride)
-            console.log(ride);
             var driver = ride.get("driverId");
         }
         res.render('pages/upcoming-rides',{
@@ -586,9 +585,9 @@ app.get('/messages', function(req, res) {
           promises.push(last_message_query.get(thread.get("last_message").id).then(function(last_message) {
             var date = last_message.createdAt;
             if(moment().diff(moment(date), 'days') < 1) {
-              date = moment(date).format("hh:mm a");
+              date = moment(date).utcOffset("-08:00").format("hh:mm a");
             } else {
-              date = moment(date).format("MMM DD");
+              date = moment(date).utcOffset("-08:00").format("MMM DD");
             }
 
             var item = {
@@ -660,9 +659,9 @@ app.get('/messages/:id', function(req, res) {
           var author = thread_messages[i].get("author");
 
           if(moment().diff(moment(date), 'days') < 1) {
-            date = moment(date).format("hh:mm a");
+            date = moment(date).utcOffset("-07:00").format("hh:mm a");
           } else {
-            date = moment(date).format("MMM DD");
+            date = moment(date).utcOffset("-07:00").format("MMM DD");
           }
 
           var item = {

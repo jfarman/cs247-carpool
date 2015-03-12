@@ -20,7 +20,7 @@
                 class="list-group-item">
                     <%var date = rides[i].get("datetime")%>
                     <%var new_date = 
-                        moment(date).format('ddd h:mm a MM/DD/YYYY')%>
+                        moment(date).utcOffset("-08:00").format('ddd h:mm a MM/DD/YYYY')%>
                     <%=new_date%>
                 </a>
             <% } %>
