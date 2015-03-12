@@ -170,6 +170,10 @@ app.get('/ride-details/:id', function(req, res) {
             var swapQuery = new Parse.Query("swap_requests");
             swapQuery.equalTo("rideId", ride).find().then(function(swap) {
             var swap_exists = swap.length > 0 ? true : false;
+            var swap_is_active = null;
+            if(swap_exists) {
+              swap_is_active = swap[0].get("isActive");
+            }
 
             res.render('pages/ride-details', {
               title: "Ride Details", 
@@ -181,7 +185,8 @@ app.get('/ride-details/:id', function(req, res) {
               start_location: startLoc,
               end_location: endLoc,
               driver_name: driver_name,
-              swap_exists: swap_exists
+              swap_exists: swap_exists,
+              swap_is_active: swap_is_active
             });
           });
         },
