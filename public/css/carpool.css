@@ -3,6 +3,25 @@ div.padding {
   background: #fafafa;
 }
 
+div.login-brand{
+  text-align: center;
+  color: #ACF0F2;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  /*margin-top: 0px;
+  margin-bottom: 0px;
+  font-family: 'Nunito', sans-serif;*/
+  font-family: 'Fredoka One', cursive;
+}
+
+h3.login{
+  color: #1695A3;
+}
+
+.panel.login-custom{
+  background :rgba(255,255,255, 0.8);
+}
+
 body.login {
     background-color: #1695A3;
 }
@@ -30,9 +49,6 @@ div.login-container {
   color: #1695A3;
 }
 
-html {
-  background: #fafafa;
-}
 
 div.background {
   background: #fafafa;
