@@ -7,7 +7,7 @@ var parseExpressCookieSession = require('parse-express-cookie-session');
 // These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
 var app = express();
-var moment = require('cloud/moment');
+var moment = require('cloud/moment.js');
 //var cookieParser = require('cookie-parser')
 var date_format = "ddd h:mm a MM/DD/YY";
 var SYSTEM_USER_ID = "r8jWeIE83n";
