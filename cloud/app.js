@@ -594,11 +594,14 @@ app.get('/messages', function(req, res) {
           var thread = threads[index].get("thread");
           var last_message_query = new Parse.Query("thread_message");
           last_message_query.include("author");
-          
           var thread_id = thread.id;
           var thread_subject = thread.get("subject");
           promises.push(last_message_query.get(thread.get("last_message").id).then(function(last_message) {
             var date = last_message.createdAt;
+            var n = 80;
+            var message_body = last_message.get("message");
+            var message_text = message_body.substr(0,n-1)+(message_body.length>n?'&hellip;':'');
+
             if(moment().diff(moment(date), 'days') < 1) {
               date = moment(date).utcOffset("-08:00").format("hh:mm a");
             } else {
@@ -611,7 +614,7 @@ app.get('/messages', function(req, res) {
               num_messages: thread.get("num_messages"),
               date: date,
               subject: thread.get("subject"),
-              message_body: last_message.get("message"),
+              message_body: message_text,
               isSystem: thread.get("isSystem")
             };
             $$_data_$$.push(item);

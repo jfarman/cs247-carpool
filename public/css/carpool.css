@@ -3,6 +3,14 @@ div.padding {
   background: #fafafa;
 }
 
+body.login {
+    background-color: #1695A3;
+}
+
+div.login-container {
+    background-color: #1695A3;
+}
+
 .location-link{
   text-decoration: underline;
   color: #225378;
